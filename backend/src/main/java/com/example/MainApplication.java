@@ -1,13 +1,13 @@
-package com.example.Visutterbackend;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class VisutterBackendApplication {
+public class MainApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VisutterBackendApplication.class, args);
+		SpringApplication.run(MainApplication.class, args);
 	}
 
 }
