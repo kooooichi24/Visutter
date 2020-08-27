@@ -4,8 +4,23 @@ import com.example.service.TwitterService;
 import org.springframework.stereotype.Service;
 import twitter4j.*;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class TwitterServiceImpl implements TwitterService {
+
+    @Override
+    @PostConstruct
+    public void init() throws TwitterException {
+        ResponseList<Status> statuses = getAllUserTimeline();
+
+        System.out.println("Showing user timeline.");
+        for (Status status : statuses) {
+            System.out.println(status.getUser().getName() + ":" + status.getText());
+            System.out.println();
+            System.out.println("-----------------------");
+        }
+    }
 
     @Override
     public User verifyCredentials() throws TwitterException {

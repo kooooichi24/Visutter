@@ -30,17 +30,18 @@ public class TwitterRestController {
         return user;
     }
 
-    @GetMapping("/userTimeline")
-    public ResponseList<Status> userTimeline() throws TwitterException {
-        ResponseList<Status> statuses = twitterService.getAllUserTimeline();
-
-        System.out.println("Showing user timeline.");
-        for (Status status : statuses) {
-            System.out.println(status.getUser().getName() + ":" + status.getText());
-            System.out.println();
-            System.out.println("-----------------------");
-        }
-
-        return statuses;
-    }
+    // TwitterServiceImplで@PostConstructを用いて起動時に実行する形式に変更（ひとまずね）
+//    @GetMapping("/userTimeline")
+//    public ResponseList<Status> userTimeline() throws TwitterException {
+//        ResponseList<Status> statuses = twitterService.getAllUserTimeline();
+//
+//        System.out.println("Showing user timeline.");
+//        for (Status status : statuses) {
+//            System.out.println(status.getUser().getName() + ":" + status.getText());
+//            System.out.println();
+//            System.out.println("-----------------------");
+//        }
+//
+//        return statuses;
+//    }
 }
