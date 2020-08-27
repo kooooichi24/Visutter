@@ -16,23 +16,26 @@ public class TwitterServiceImpl implements TwitterService {
     @Override
     public ResponseList<Status> getAllUserTimeline() throws TwitterException {
         Twitter twitter = TwitterFactory.getSingleton();
-
-        User user = twitter.verifyCredentials();
+        User user = verifyCredentials();
         Integer statusesCount = user.getStatusesCount();
-        Integer page = 1;
-        Integer count = 200; // Pagingを用いたgetUserTimelineの最大取得数は200件な仕様らしい
 
+        Integer page = 1;
+        final Integer COUNT_MAX = 200; // Pagingを用いたgetUserTimelineの最大取得数は200件な仕様らしい
         ResponseList<Status> statuses = null;
 
-        for (int i = 0; i < statusesCount/count + 1; i++) {
-            Paging paging = new Paging(page, count);
-
+        while (true) {
+            Paging paging = new Paging(page, COUNT_MAX);
             if (statuses == null) {
                 statuses = twitter.getUserTimeline(paging);
             } else {
                 statuses.addAll(twitter.getUserTimeline(paging));
             }
             page += 1;
+
+            // 全件取得したら終了
+            if (statuses.size() == statusesCount) {
+                break;
+            }
         }
 
         return statuses;
