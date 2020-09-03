@@ -16,7 +16,7 @@ public class TwitterServiceImpl implements TwitterService {
 
         System.out.println("Showing user timeline.");
         for (Status status : statuses) {
-            System.out.println(status.getUser().getName() + ":" + status.getText());
+            System.out.println(status.getUser().getName() + ":" + status);
             System.out.println();
             System.out.println("-----------------------");
         }
