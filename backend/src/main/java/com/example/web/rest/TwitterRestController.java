@@ -2,6 +2,7 @@ package com.example.web.rest;
 
 import com.example.service.TwitterService;
 import com.example.web.response.TimelineResponse;
+import com.example.web.response.UserResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,22 +21,24 @@ public class TwitterRestController {
     }
 
     @GetMapping("/user")
-    public User user() throws Exception {
+    public UserResponse user() throws Exception {
         User user = twitterService.verifyCredentials();
 
-        String userName = user.getName();
-        String displayName = user.getScreenName();
-        int fav = user.getFavouritesCount();
-
-        System.out.println("username: " + userName);
-        System.out.println("displayName: " + displayName);
-        System.out.println("fav: " + fav);
-
-        return user;
+        UserResponse userResponse = new UserResponse(user);
+        return userResponse;
+//        String userName = user.getName();
+//        String displayName = user.getScreenName();
+//        int fav = user.getFavouritesCount();
+//
+//        System.out.println("username: " + userName);
+//        System.out.println("displayName: " + displayName);
+//        System.out.println("fav: " + fav);
+//
+//        return user;
     }
 
     // TwitterServiceImplで@PostConstructを用いて起動時に実行する形式に変更（ひとまずね）
-    @GetMapping("/userTimeline")
+    @GetMapping("/timeline")
     public List<TimelineResponse> userTimeline() throws TwitterException {
         ResponseList<Status> statuses = twitterService.getAllUserTimeline();
         List<TimelineResponse> timelineResponseList = new ArrayList<>();

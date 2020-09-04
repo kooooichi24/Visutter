@@ -9,7 +9,6 @@ public class TimelineResponse {
     private Date createdAt;
     private Integer favoriteCount;
     private Integer retweetCount;
-    private UserResponse user;
 
     public TimelineResponse(Status status) {
         this.id = status.getId();
@@ -17,7 +16,6 @@ public class TimelineResponse {
         this.createdAt = status.getCreatedAt();
         this.favoriteCount = status.getFavoriteCount();
         this.retweetCount = status.getRetweetCount();
-        this.user = new UserResponse(status.getUser());
     }
 
     public Long getId() {
@@ -40,7 +38,4 @@ public class TimelineResponse {
         return retweetCount;
     }
 
-    public UserResponse getUser() {
-        return user;
-    }
 }
