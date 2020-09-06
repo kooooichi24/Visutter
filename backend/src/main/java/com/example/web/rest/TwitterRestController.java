@@ -3,6 +3,7 @@ package com.example.web.rest;
 import com.example.service.TwitterService;
 import com.example.web.response.TimelineResponse;
 import com.example.web.response.UserResponse;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import twitter4j.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/twt")
 public class TwitterRestController {
@@ -26,24 +28,13 @@ public class TwitterRestController {
 
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
-//        String userName = user.getName();
-//        String displayName = user.getScreenName();
-//        int fav = user.getFavouritesCount();
-//
-//        System.out.println("username: " + userName);
-//        System.out.println("displayName: " + displayName);
-//        System.out.println("fav: " + fav);
-//
-//        return user;
     }
 
-    // TwitterServiceImplで@PostConstructを用いて起動時に実行する形式に変更（ひとまずね）
     @GetMapping("/timeline")
     public List<TimelineResponse> userTimeline() throws TwitterException {
         ResponseList<Status> statuses = twitterService.getAllUserTimeline();
         List<TimelineResponse> timelineResponseList = new ArrayList<>();
 
-        System.out.println("Showing user timeline.");
         for (Status status : statuses) {
             TimelineResponse timelineResponse = new TimelineResponse(status);
             timelineResponseList.add(timelineResponse);
