@@ -1,13 +1,13 @@
 <template>
   <div class="about">
     <h1>This is an about page</h1>
+    <v-btn rounded color="primary" dark @click="getTimeline" >Home</v-btn>
     <CalendarHeatmap />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import axios from 'axios';
 import CalendarHeatmap from '@/components/CalendarHeatmap.vue';
 
 export default Vue.extend({
@@ -16,13 +16,12 @@ export default Vue.extend({
     CalendarHeatmap,
   },
   created(): void {
-    axios
-      .get("http://localhost:8080/api/twt/timeline")
-      .then(res => {
-        console.log(res.data);
-      });
-
-    console.log(this.$store.getters["twitter/tweets"]);
+    this.$store.dispatch('twitter/setTimeline')
+  },
+  methods: {
+    getTimeline(): void {
+      console.log(this.$store.getters["twitter/timeline"]);
+    }
   }
 });
 </script>
