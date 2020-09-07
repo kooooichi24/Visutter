@@ -1,6 +1,5 @@
-import { Module } from 'vuex';
+import { Module, GetterTree } from 'vuex';
 import { TwitterState, RootState } from '@/store/types';
-import getters from './getters';
 
 const state: TwitterState = {
   tweet: {
@@ -11,6 +10,12 @@ const state: TwitterState = {
     retweetCount: 0
   }
 }
+
+const getters: GetterTree<TwitterState, RootState> = {
+  tweets: (state: TwitterState) => {
+    return state.tweet;
+  },
+};
 
 export const twitter: Module<TwitterState, RootState> = {
   namespaced: true,
