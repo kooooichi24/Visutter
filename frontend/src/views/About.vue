@@ -21,8 +21,8 @@ export default Vue.extend({
       .then(res => {
         console.log(res.data);
       });
-      
-    console.log("About component is created now!");
+
+    console.log(this.$store.getters["twitter/tweets"]);
   }
 });
 </script>
