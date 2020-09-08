@@ -69,12 +69,15 @@
         style="max-width: 650px"
       >
         <v-text-field
+          v-model="searchBy"
           :append-icon-cb="() => {}"
           placeholder="Search..."
           single-line
           append-icon="mdi-magnify"
           color="white"
           hide-details
+          @keydown.enter="searchByUser(searchBy)"
+          @click:append="searchByUser(searchBy)"
         ></v-text-field>
       </v-row>
     </v-app-bar>
@@ -97,9 +100,28 @@
 <script lang="ts">
 import Vue from 'vue';
 
+export type DataType = {
+  searchBy: string | null;
+  drawer: boolean | null;
+  items: Items[];
+  items2: Items2[];
+}
+
+export type Items = {
+  icon: string;
+  text: string;
+}
+
+export type Items2 = {
+  picture: number;
+  text: string;
+}
+
 export default Vue.extend({
   name: 'App',
-  data: () => ({
+  data(): DataType {
+    return {
+      searchBy: null,
       drawer: null,
       items: [
         { icon: 'mdi-trending-up', text: 'Most Popular' },
@@ -115,9 +137,17 @@ export default Vue.extend({
         { picture: 58, text: 'Nokia' },
         { picture: 78, text: 'MKBHD' },
       ],
-    }),
+    };
+  },
   created(): void {
     this.$vuetify.theme.dark = true
+  },
+  methods: {
+    searchByUser(searchBy: string): void {
+      if (searchBy !== null) {
+        this.$store.dispatch('twitter/setTimeline');
+      }
+    },
   },
 });
 </script>
