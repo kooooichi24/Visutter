@@ -13,4 +13,5 @@ export interface Tweet {
   createdAt: string
   favoriteCount: number
   retweetCount: number
+  isRetweeted: boolean
 }

@@ -9,7 +9,8 @@ const state: TwitterState = {
       text: "2020-09-06: 1 tweet",
       createdAt: "2020-09-07T09:00:15.000+09:00",
       favoriteCount: 0,
-      retweetCount: 0
+      retweetCount: 0,
+      isRetweeted: false,
     },
   ],
   timeline: [],
