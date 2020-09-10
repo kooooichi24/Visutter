@@ -1,12 +1,14 @@
 <template>
   <div>
-    this is total tweets component.
+    this is statistics tweets component.
+    <TotalTweets :total="tweetStatistics.totalTweets" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
+import TotalTweets from '@/components/Statistics/TotalTweets.vue';
 
 export type DataType = {
   tweetStatistics: TweetStatistics;
@@ -42,7 +44,10 @@ export type MostCount = {
 };
 
 export default Vue.extend({
-  name: 'TotalTweets',
+  name: 'StatisticsTweets',
+  components: {
+    TotalTweets
+  },
   data(): DataType {
     return {
       tweetStatistics: {

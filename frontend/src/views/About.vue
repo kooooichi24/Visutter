@@ -3,20 +3,20 @@
     <h1>This is an about page</h1>
     <v-btn rounded color="primary" dark @click="getTimeline" >Home</v-btn>
     <CalendarHeatmap />
-    <TotalTweets />
+    <StatisticsTweets />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import CalendarHeatmap from '@/components/CalendarHeatmap.vue';
-import TotalTweets from '@/components/Statics/TotalTweets.vue';
+import StatisticsTweets from '@/components/Statistics/StatisticsTweets.vue';
 
 export default Vue.extend({
   name: 'Home',
   components: {
     CalendarHeatmap,
-    TotalTweets,
+    StatisticsTweets,
   },
   created(): void {
     this.$store.dispatch('twitter/setTimeline')
