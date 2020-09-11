@@ -1,6 +1,5 @@
 <template>
   <div>
-    this is statistics tweets component.
     <TotalTweets :total="tweetStatistics.totalTweets" />
   </div>
 </template>

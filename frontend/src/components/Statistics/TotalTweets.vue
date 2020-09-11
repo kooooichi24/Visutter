@@ -1,17 +1,17 @@
 <template>
-  <div>
-    this is total tweets component.
-    <div>total</div>
-    <div>{{ total }}</div>
-    <div>tweets</div>
-    <v-card
-      class="pa-2 grey darken-4"
-      outlined
-      flat
-    >
-      One of three columns
-    </v-card>
-  </div>
+  <v-card
+    class="pa-2 grey darken-4"
+    outlined
+    flat
+  >
+    <v-list-item three-line>
+      <v-list-item-content>
+        <div class="overline">Total</div>
+        <v-list-item-title class="headline mb-1">{{ total }} tweets</v-list-item-title>
+        <v-list-item-subtitle>Jan 1 ー Today</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+  </v-card>
 </template>
 
 <script lang="ts">
