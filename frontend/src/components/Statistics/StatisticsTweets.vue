@@ -1,6 +1,18 @@
 <template>
   <div>
-    <TotalTweets :total="tweetStatistics.totalTweets" />
+    <v-container>
+      <v-row no-gutters>
+        <v-col
+          v-for="n in 3"
+          :key="n"
+          cols="12"
+          sm="4"
+        >
+          <TotalTweets :totalTweets="tweetStatistics.totalTweets" />
+        </v-col>
+      </v-row>
+      
+    </v-container>
   </div>
 </template>
 
@@ -14,7 +26,7 @@ export type DataType = {
 }
 
 export type TweetStatistics = {
-  totalTweets: number | null;
+  totalTweets: TotalTweetType;
   mostFavoriteCount: number | null;
   mostRetweetCount: number | null;
   longestStreak: Streak;
@@ -28,6 +40,11 @@ export type Streak = {
   term: string;
 }
 
+export type TotalTweetType = {
+  total: number | null;
+  term: string;
+}
+
 export type Tweet = {
   id: number;
   text: string;
@@ -37,11 +54,6 @@ export type Tweet = {
   isRetweeted: boolean;
 }
 
-export type MostCount = {
-  favNum: number;
-  retweetNum: number;
-};
-
 export default Vue.extend({
   name: 'StatisticsTweets',
   components: {
@@ -50,7 +62,10 @@ export default Vue.extend({
   data(): DataType {
     return {
       tweetStatistics: {
-        totalTweets: null,
+        totalTweets: {
+          total: null,
+          term: ""
+        },
         mostFavoriteCount: 0,
         mostRetweetCount: null,
         longestStreak: {
@@ -85,7 +100,13 @@ export default Vue.extend({
       this.calcStreak(timeline);
     },
     calcTotalTweets(timeline: Tweet[]): void {
-      this.tweetStatistics.totalTweets = timeline.length;
+      const firstDate: Moment = moment(timeline.slice(-1)[0].createdAt, 'YYYY-MM-DD');
+      const totalTweets: TotalTweetType = {
+        total: timeline.length,
+        term: moment.months(firstDate.get('month')) + firstDate.format(' DD, YYYY')
+      }
+
+      this.tweetStatistics.totalTweets = totalTweets;
     },
     calcMostCount(timeline: Tweet[]): void {
       let favNum = 0;
