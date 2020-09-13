@@ -1,48 +1,43 @@
 <template>
-  <div>
-    <v-container>
-      <v-row no-gutters>
-        <v-col
-          v-for="n in 3"
-          :key="n"
-          cols="12"
-          sm="4"
-        >
-          <TotalTweets :totalTweets="tweetStatistics.totalTweets" />
-        </v-col>
-      </v-row>
-      
-    </v-container>
-  </div>
+  <v-container>
+    <v-row>
+      <v-col
+        v-for="card in tweetStatistics"
+        :key="card.key"
+        cols="12"
+        sm="4"
+        lg="3"
+      >
+        <StatisticsCard :card="card" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import TotalTweets from '@/components/Statistics/TotalTweets.vue';
+import StatisticsCard from '@/components/Statistics/StatisticsCard.vue';
 
 export type DataType = {
   tweetStatistics: TweetStatistics;
 }
 
 export type TweetStatistics = {
-  totalTweets: TotalTweetType;
-  mostFavoriteCount: number | null;
-  mostRetweetCount: number | null;
-  longestStreak: Streak;
-  currentStreak: Streak;
-  streakSum: Streak;
-  busiestDay: Streak;
+  totalTweets: CardType;
+  mostFavoriteCount: CardType;
+  mostRetweetCount: CardType;
+  longestStreak: CardType;
+  currentStreak: CardType;
+  streakSum: CardType;
+  busiestDay: CardType;
 }
 
-export type Streak = {
-  days: number | null;
-  term: string;
-}
 
-export type TotalTweetType = {
-  total: number | null;
-  term: string;
+export type CardType = {
+  overline: string;
+  title: string;
+  subtitle: string;
 }
 
 export type Tweet = {
@@ -57,32 +52,45 @@ export type Tweet = {
 export default Vue.extend({
   name: 'StatisticsTweets',
   components: {
-    TotalTweets
+    StatisticsCard,
   },
   data(): DataType {
     return {
       tweetStatistics: {
         totalTweets: {
-          total: null,
-          term: ""
+          overline: "",
+          title: "",
+          subtitle: "",
         },
-        mostFavoriteCount: 0,
-        mostRetweetCount: null,
+        mostFavoriteCount: {
+          overline: "",
+          title: "",
+          subtitle: "",
+        },
+        mostRetweetCount: {
+          overline: "",
+          title: "",
+          subtitle: "",
+        },
         longestStreak: {
-          days: null,
-          term: ""
+          overline: "",
+          title: "",
+          subtitle: "",
         },
         currentStreak: {
-          days: null,
-          term: ""
+          overline: "",
+          title: "",
+          subtitle: "",
         },
         streakSum: {
-          days: null,
-          term: ""
+          overline: "",
+          title: "",
+          subtitle: "",
         },
         busiestDay: {
-          days: null,
-          term: ""
+          overline: "",
+          title: "",
+          subtitle: "",
         },
       }
     };
@@ -101,29 +109,45 @@ export default Vue.extend({
     },
     calcTotalTweets(timeline: Tweet[]): void {
       const firstDate: Moment = moment(timeline.slice(-1)[0].createdAt, 'YYYY-MM-DD');
-      const totalTweets: TotalTweetType = {
-        total: timeline.length,
-        term: moment.months(firstDate.get('month')) + firstDate.format(' DD, YYYY')
+      const totalTweets: CardType = {
+        overline: "Total",
+        title: timeline.length + " tweets",
+        subtitle: moment.months(firstDate.get('month')) + firstDate.format(' DD, YYYY') + " ー Today",
       }
 
       this.tweetStatistics.totalTweets = totalTweets;
     },
     calcMostCount(timeline: Tweet[]): void {
       let favNum = 0;
-      let retweetNum = 0; 
+      let favDate: Moment = moment();
+      let retweetNum = 0;
+      let retweetDate: Moment = moment();
 
       timeline.forEach(tweet => {
         if (tweet.favoriteCount > favNum) {
           favNum = tweet.favoriteCount;
+          favDate = moment(tweet.createdAt, 'YYYY-MM-DD');
         }
         if (tweet.isRetweeted === false && tweet.retweetCount > retweetNum) {
           retweetNum = tweet.retweetCount;
-          console.log(tweet.createdAt, tweet.text, tweet.favoriteCount, tweet.retweetCount, tweet.isRetweeted);
+          retweetDate = moment(tweet.createdAt, 'YYYY-MM-DD');
         }
       })
       
-      this.tweetStatistics.mostFavoriteCount = favNum;
-      this.tweetStatistics.mostRetweetCount = retweetNum;
+      const mostFavoriteCount: CardType = {
+        overline: "Most Fav",
+        title: favNum + " fav",
+        subtitle: moment.months(favDate.get('month')) + favDate.format(' DD, YYYY')
+      }
+
+      const mostRetweetCount: CardType = {
+        overline: "Most Retweet",
+        title: favNum + " retweet",
+        subtitle: moment.months(retweetDate.get('month')) + retweetDate.format(' DD, YYYY')
+      }
+
+      this.tweetStatistics.mostFavoriteCount = mostFavoriteCount;
+      this.tweetStatistics.mostRetweetCount = mostRetweetCount;
     },
     calcStreak(timeline: Tweet[]): void {
       let busiestDate = "";
@@ -144,10 +168,13 @@ export default Vue.extend({
         }
       }
 
-      this.tweetStatistics.busiestDay = {
-        days: busiestNum,
-        term: busiestDate
+      const busiestDay: CardType = {
+        overline: "Busiest day",
+        title: busiestNum + " tweets",
+        subtitle: busiestDate
       }
+
+      this.tweetStatistics.busiestDay = busiestDay
     }
   }
 });
