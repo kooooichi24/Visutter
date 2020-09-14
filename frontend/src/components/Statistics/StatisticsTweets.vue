@@ -106,9 +106,12 @@ export default Vue.extend({
       this.calcTotalTweets(timeline);
       this.calcMostCount(timeline);
       this.calcStreak(timeline);
+      this.calcLongestStreak(timeline);
     },
     calcTotalTweets(timeline: Tweet[]): void {
-      const firstDate: Moment = moment(timeline.slice(-1)[0].createdAt, 'YYYY-MM-DD');
+      // timelineを年月が早い順に変更する
+      const newTimeline = [ ...timeline ].reverse();
+      const firstDate: Moment = moment(newTimeline[0].createdAt, 'YYYY-MM-DD');
       const totalTweets: CardType = {
         overline: "Total",
         title: timeline.length + " tweets",
@@ -150,15 +153,17 @@ export default Vue.extend({
       this.tweetStatistics.mostRetweetCount = mostRetweetCount;
     },
     calcStreak(timeline: Tweet[]): void {
-      const firstDate: Moment = moment(timeline.slice(-1)[0].createdAt, 'YYYY-MM-DD');
+      // timelineを年月が早い順に変更する
+      const newTimeline = [ ...timeline ].reverse();
+      const firstDate: Moment = moment(newTimeline[0].createdAt, 'YYYY-MM-DD');
       let busiestDate = "";
-      let busiestNum = 0;
-      let count = 0;
-      let streakCount = 0;
-      
-      for (let i = 0; i < timeline.length-1; i++) {
-        const first: Moment = moment(timeline[i].createdAt, 'YYYY-MM-DD');
-        const second: Moment = moment(timeline[i+1].createdAt, 'YYYY-MM-DD');
+      let busiestNum = 1;
+      let count = 1;
+      let streakCount = 1;
+
+      for (let i = 0; i < newTimeline.length-1; i++) {
+        const first: Moment = moment(newTimeline[i].createdAt, 'YYYY-MM-DD');
+        const second: Moment = moment(newTimeline[i+1].createdAt, 'YYYY-MM-DD');
         if (first.diff(second, 'days') === 0) {
           count++;
           if (count > busiestNum) {
@@ -166,7 +171,7 @@ export default Vue.extend({
             busiestDate = moment.months(first.get('month')) + first.format(' DD, YYYY');
           }
         } else {
-          count = 0;
+          count = 1;
           streakCount++;
         }
       }
@@ -174,8 +179,8 @@ export default Vue.extend({
       const busiestDay: CardType = {
         overline: "Busiest day",
         title: busiestNum + " tweets",
-        subtitle: busiestDate
-      }
+        subtitle: busiestDate,
+      };
 
       const streakSum: CardType = {
         overline: "Streak Sum",
@@ -185,6 +190,45 @@ export default Vue.extend({
 
       this.tweetStatistics.busiestDay = busiestDay;
       this.tweetStatistics.streakSum = streakSum;
+    },
+    calcLongestStreak(timeline: Tweet[]): void {
+      // timelineを年月が早い順に変更する
+      const newTimeline = [ ...timeline ].reverse();
+      const firstDate: Moment = moment(newTimeline[0].createdAt, 'YYYY-MM-DD');
+      let longestStartDate: Moment = firstDate;
+      let longestEndDate: Moment = moment();
+      let startDate: Moment = firstDate;
+      let endDate: Moment = firstDate;
+      let streakCount = 1;
+      let longestStreakCount = 0;
+
+      for (let i = 0; i < newTimeline.length-1; i++) {
+        const first: Moment = moment(newTimeline[i].createdAt, 'YYYY-MM-DD');
+        const second: Moment = moment(newTimeline[i+1].createdAt, 'YYYY-MM-DD');
+        
+        if (Math.abs(first.diff(second, 'days')) === 1) {
+          streakCount++;
+          endDate = second;
+
+          // 連続日数を更新したとき
+          if (streakCount > longestStreakCount) {  
+            longestStreakCount = streakCount;
+            longestStartDate = startDate;
+            longestEndDate = endDate;
+          }
+        } else if (Math.abs(first.diff(second, 'days')) >= 2) {
+          startDate = second;
+          endDate = second;
+          streakCount = 1;
+        }
+      }
+
+      const longestStreak: CardType = {
+        overline: "Longest Streak",
+        title: longestStreakCount + " days",
+        subtitle: moment.months(longestStartDate.get('month')) + longestStartDate.format(' DD, YYYY') + " ー " + moment.months(longestEndDate.get('month')) + longestEndDate.format(' DD, YYYY'),
+      };
+      this.tweetStatistics.longestStreak = longestStreak;
     }
   }
 });
