@@ -150,21 +150,24 @@ export default Vue.extend({
       this.tweetStatistics.mostRetweetCount = mostRetweetCount;
     },
     calcStreak(timeline: Tweet[]): void {
+      const firstDate: Moment = moment(timeline.slice(-1)[0].createdAt, 'YYYY-MM-DD');
       let busiestDate = "";
       let busiestNum = 0;
       let count = 0;
+      let streakCount = 0;
       
       for (let i = 0; i < timeline.length-1; i++) {
         const first: Moment = moment(timeline[i].createdAt, 'YYYY-MM-DD');
         const second: Moment = moment(timeline[i+1].createdAt, 'YYYY-MM-DD');
         if (first.diff(second, 'days') === 0) {
-          count += 1;
+          count++;
           if (count > busiestNum) {
             busiestNum = count;
             busiestDate = moment.months(first.get('month')) + first.format(' DD, YYYY');
           }
         } else {
           count = 0;
+          streakCount++;
         }
       }
 
@@ -174,7 +177,14 @@ export default Vue.extend({
         subtitle: busiestDate
       }
 
-      this.tweetStatistics.busiestDay = busiestDay
+      const streakSum: CardType = {
+        overline: "Streak Sum",
+        title: streakCount + " days",
+        subtitle: moment.months(firstDate.get('month')) + firstDate.format(' DD, YYYY') + " ー Today",
+      };
+
+      this.tweetStatistics.busiestDay = busiestDay;
+      this.tweetStatistics.streakSum = streakSum;
     }
   }
 });
