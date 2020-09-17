@@ -10,6 +10,7 @@ public class UserResponse {
     private Integer followersCount;
     private Integer friendsCount;
     private Integer statusesCount;
+    private String profileImageUrlHttps;
 
     public UserResponse(User user) {
         this.id = user.getId();
@@ -19,6 +20,7 @@ public class UserResponse {
         this.followersCount = user.getFollowersCount();
         this.friendsCount = user.getFriendsCount();
         this.statusesCount = user.getStatusesCount();
+        this.profileImageUrlHttps = user.getProfileImageURLHttps();
     }
 
     public Long getId() {
@@ -47,5 +49,9 @@ public class UserResponse {
 
     public Integer getStatusesCount() {
         return statusesCount;
+    }
+
+    public String getProfileImageUrlHttps() {
+        return profileImageUrlHttps;
     }
 }
