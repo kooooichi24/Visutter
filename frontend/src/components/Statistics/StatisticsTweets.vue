@@ -6,7 +6,7 @@
         :key="card.key"
         cols="12"
         sm="4"
-        lg="3"
+        lg="6"
       >
         <StatisticsCard :card="card" />
       </v-col>
@@ -107,6 +107,7 @@ export default Vue.extend({
       this.calcMostCount(timeline);
       this.calcStreak(timeline);
       this.calcLongestStreak(timeline);
+      this.calcCurrentStreak(timeline);
     },
     calcTotalTweets(timeline: Tweet[]): void {
       // timelineを年月が早い順に変更する
@@ -229,6 +230,36 @@ export default Vue.extend({
         subtitle: moment.months(longestStartDate.get('month')) + longestStartDate.format(' DD, YYYY') + " ー " + moment.months(longestEndDate.get('month')) + longestEndDate.format(' DD, YYYY'),
       };
       this.tweetStatistics.longestStreak = longestStreak;
+    },
+    calcCurrentStreak(timeline: Tweet[]): void {
+      let currentStartDate: Moment = moment(timeline[0].createdAt, 'YYYY-MM-DD');
+      const currentEndDate: Moment = moment(timeline[0].createdAt, 'YYYY-MM-DD');
+      let currentStreakCount = 1;
+
+      // 新しいtweetから検索する
+      for (let i = 0; i < timeline.length-1; i++) {
+        const first: Moment = moment(timeline[i].createdAt, 'YYYY-MM-DD');
+        const second: Moment = moment(timeline[i+1].createdAt, 'YYYY-MM-DD');
+        
+        if (Math.abs(first.diff(second, 'days')) === 0) {
+          continue;
+        }
+        if (Math.abs(first.diff(second, 'days')) === 1) {
+          currentStreakCount++;
+          currentStartDate = second;
+          continue;
+        }
+        if (Math.abs(first.diff(second, 'days')) >= 2) {
+          break;
+        }
+      }
+
+      const currentStreak: CardType = {
+        overline: "Current Streak",
+        title: currentStreakCount + " days",
+        subtitle: moment.months(currentStartDate.get('month')) + currentStartDate.format(' DD, YYYY') + " ー " + moment.months(currentEndDate.get('month')) + currentEndDate.format(' DD, YYYY'),
+      }
+      this.tweetStatistics.currentStreak = currentStreak;
     }
   }
 });
