@@ -124,11 +124,9 @@ export default Vue.extend({
       searchBy: null,
       drawer: null,
       items: [
-        { icon: 'mdi-trending-up', text: 'Most Popular' },
-        { icon: 'mdi-youtube-subscription', text: 'Subscriptions' },
-        { icon: 'mdi-history', text: 'History' },
-        { icon: 'mdi-playlist-play', text: 'Playlists' },
-        { icon: 'mdi-clock', text: 'Watch Later' },
+        { icon: 'mdi-view-dashboard-outline', text: 'Achievement' },
+        { icon: 'mdi-chart-multiline', text: 'Progress Charts' },
+        { icon: 'mdi-view-comfy', text: 'Heatmap' },
       ],
       items2: [
         { picture: 28, text: 'Joseph' },
