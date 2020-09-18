@@ -3,10 +3,9 @@ package com.example.web.rest;
 import com.example.service.TwitterService;
 import com.example.web.response.TimelineResponse;
 import com.example.web.response.UserResponse;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.lang.NonNull;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import twitter4j.*;
 
@@ -23,16 +22,16 @@ public class TwitterRestController {
     }
 
     @GetMapping("/user")
-    public UserResponse user() throws Exception {
-        User user = twitterService.verifyCredentials();
-
+    public UserResponse user(@RequestParam("screenName") String screenName) throws TwitterException {
+        Twitter twitter = TwitterFactory.getSingleton();
+        User user = twitter.showUser(screenName);
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
     }
 
     @GetMapping("/timeline")
-    public List<TimelineResponse> userTimeline() throws TwitterException {
-        ResponseList<Status> statuses = twitterService.getAllUserTimeline();
+    public List<TimelineResponse> userTimeline(@RequestParam("screenName") String screenName) throws TwitterException {
+        ResponseList<Status> statuses = twitterService.getAllUserTimeline(screenName);
         List<TimelineResponse> timelineResponseList = new ArrayList<>();
 
         for (Status status : statuses) {

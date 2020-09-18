@@ -146,7 +146,7 @@ export default Vue.extend({
 
       const mostRetweetCount: CardType = {
         overline: "Most Retweet",
-        title: favNum + " retweet",
+        title: retweetNum + " retweet",
         subtitle: moment.months(retweetDate.get('month')) + retweetDate.format(' DD, YYYY')
       }
 

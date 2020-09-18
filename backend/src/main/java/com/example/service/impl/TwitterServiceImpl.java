@@ -7,16 +7,16 @@ import twitter4j.*;
 @Service
 public class TwitterServiceImpl implements TwitterService {
 
-    @Override
-    public User verifyCredentials() throws TwitterException {
-        Twitter twitter = TwitterFactory.getSingleton();
-        return twitter.verifyCredentials();
-    }
+//    @Override
+//    public User verifyCredentials() throws TwitterException {
+//        Twitter twitter = TwitterFactory.getSingleton();
+//        return twitter.verifyCredentials();
+//    }
 
     @Override
-    public ResponseList<Status> getAllUserTimeline() throws TwitterException {
+    public ResponseList<Status> getAllUserTimeline(String screenName) throws TwitterException {
         Twitter twitter = TwitterFactory.getSingleton();
-        User user = verifyCredentials();
+        User user = twitter.showUser(screenName);
         Integer statusesCount = user.getStatusesCount();
 
         Integer page = 1;
@@ -26,9 +26,9 @@ public class TwitterServiceImpl implements TwitterService {
         while (true) {
             Paging paging = new Paging(page, COUNT_MAX);
             if (statuses == null) {
-                statuses = twitter.getUserTimeline(paging);
+                statuses = twitter.getUserTimeline(screenName, paging);
             } else {
-                statuses.addAll(twitter.getUserTimeline(paging));
+                statuses.addAll(twitter.getUserTimeline(screenName, paging));
             }
             page += 1;
 

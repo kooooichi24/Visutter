@@ -29,11 +29,11 @@
           >
             <v-list-item-avatar>
               <img
-                :src="`https://randomuser.me/api/portraits/men/${item.picture}.jpg`"
+                :src="item.profileImageUrlHttps"
                 alt=""
               >
             </v-list-item-avatar>
-            <v-list-item-title v-text="item.text"></v-list-item-title>
+            <v-list-item-title v-text="item.screenName"></v-list-item-title>
           </v-list-item>
         </v-list>
         <v-list-item
@@ -83,13 +83,6 @@
     </v-app-bar>
 
     <v-main>
-      <router-link to="/">
-        <v-btn rounded color="primary" dark>Home</v-btn>
-      </router-link>
-      <router-link to="/about">
-        <v-btn rounded color="primary" dark>About</v-btn>
-      </router-link>
-
       <!-- ルートアウトレット -->
       <!-- ルートとマッチしたコンポーネントがここへ描画されます -->
       <router-view></router-view>
@@ -113,8 +106,8 @@ export type Items = {
 }
 
 export type Items2 = {
-  picture: number;
-  text: string;
+  profileImageUrlHttps: string;
+  screeenName: string;
 }
 
 export default Vue.extend({
@@ -129,21 +122,25 @@ export default Vue.extend({
         { icon: 'mdi-view-comfy', text: 'Heatmap' },
       ],
       items2: [
-        { picture: 28, text: 'Joseph' },
-        { picture: 38, text: 'Apple' },
-        { picture: 48, text: 'Xbox Ahoy' },
-        { picture: 58, text: 'Nokia' },
-        { picture: 78, text: 'MKBHD' },
       ],
     };
   },
   created(): void {
     this.$vuetify.theme.dark = true
   },
+  mounted(): void {
+    this.$store.watch(
+      (state, getters) => getters["twitter/user"],
+      (newValue) => {
+        this.items2 = newValue
+      }
+    );
+  },
   methods: {
     searchByUser(searchBy: string): void {
       if (searchBy !== null) {
-        this.$store.dispatch('twitter/setTimeline');
+        this.$store.dispatch('twitter/setTimeline', searchBy);
+        this.$store.dispatch('twitter/searchScreenName', searchBy);
       }
     },
   },

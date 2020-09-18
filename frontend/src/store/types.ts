@@ -5,6 +5,7 @@ export interface RootState {
 export interface TwitterState {
   tweets: Tweet[];
   timeline: Tweet[];
+  user: User[];
 }
 
 export interface Tweet {
@@ -14,4 +15,15 @@ export interface Tweet {
   favoriteCount: number
   retweetCount: number
   isRetweeted: boolean
+}
+
+export interface User {
+  id: number
+  name: string
+  screenName: string
+  description: string
+  followersCount: number
+  friendsCount: number
+  statusesCount: number
+  profileImageUrlHttps: string
 }

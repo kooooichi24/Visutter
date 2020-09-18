@@ -1,7 +1,5 @@
 <template>
-  <div>
-    caledar heatmap component!!!
-  </div>
+  <div></div>
 </template>
 
 <script lang="ts">

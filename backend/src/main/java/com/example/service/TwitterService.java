@@ -7,7 +7,7 @@ import twitter4j.User;
 
 public interface TwitterService {
 
-    User verifyCredentials() throws TwitterException;
+//    User verifyCredentials() throws TwitterException;
 
-    ResponseList<Status> getAllUserTimeline() throws TwitterException;
+    ResponseList<Status> getAllUserTimeline(String screenName) throws TwitterException;
 }
