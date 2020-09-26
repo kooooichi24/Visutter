@@ -29,7 +29,8 @@
               label: 'Data One',
               backgroundColor: '#007900',
               data: [this.getRandomInt(), this.getRandomInt()]
-            }, {
+            },
+            {
               label: 'Data One',
               backgroundColor: '#f87979',
               data: [this.getRandomInt(), this.getRandomInt()]
