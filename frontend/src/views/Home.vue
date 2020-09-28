@@ -1,20 +1,20 @@
 <template>
   <div class="home">
     <Achievement />
-    <RandomChart />
+    <CumulativeSumChart />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Achievement from '@/components/Achievement.vue';
-import RandomChart from '@/components/RandomChart.vue';
+import CumulativeSumChart from '@/components/CumulativeSumChart.vue';
 
 export default Vue.extend({
   name: 'Home',
   components: {
     Achievement,
-    RandomChart
+    CumulativeSumChart
   },
 });
 </script>
