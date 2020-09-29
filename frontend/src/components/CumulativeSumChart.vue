@@ -21,28 +21,35 @@ export default Vue.extend({
   data(): DataType {
     return {
       datacollection: null
-    }
+    };
   },
   mounted(): void {
-    this.fillData()
+    this.fillData();
+    this.$store.watch(
+      (state, getters) => getters["twitter/timeline"],
+      (newValue) => this.setDataCollection(newValue)
+    );
   },
   methods: {
+    setDataCollection(timeline: any): void {
+      console.log(timeline);
+    },
     fillData(): void {
       this.datacollection = {
-        labels: [this.getRandomInt(), this.getRandomInt()],
+        labels: ['1/1', '1/2', '1/3', '1/4'],
         datasets: [
           {
-            label: 'Tweets',
+            label: 'Tweet',
             backgroundColor: '#007900',
-            data: [1, 2]
+            data: [0, 1, 2, 3]
           },
-        ]
-      }
+        ],
+      };
     },
     getRandomInt(): number {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
-    }
-  }
+    },
+  },
 });
 </script>
 
