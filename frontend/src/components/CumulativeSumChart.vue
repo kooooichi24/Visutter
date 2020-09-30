@@ -6,11 +6,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import moment, { Moment } from 'moment';
 import LineChart from './LineChart.vue'
 import { ChartData } from "chart.js";
 
 type DataType = {
   datacollection: ChartData | null;
+}
+
+type Tweet = {
+  id: number;
+  text: string;
+  createdAt: string;
+  favoriteCount: number;
+  retweetCount: number;
+  isRetweeted: boolean;
 }
 
 export default Vue.extend({
@@ -31,8 +41,22 @@ export default Vue.extend({
     );
   },
   methods: {
-    setDataCollection(timeline: any): void {
-      console.log(timeline);
+    setDataCollection(timeline: Tweet[]): void {
+      const newTimeline = [ ...timeline ].reverse();
+      const labels: string[] = [];
+
+      const startDate: string = moment(newTimeline[0].createdAt).format('YYYY-MM-DD');
+      const endDate: string = moment(newTimeline[newTimeline.length-1].createdAt).format('YYYY-MM-DD');
+      
+
+      // newTimeline.forEach(t => {
+      //   const createdAt = moment(t.createdAt, 'YYYY-MM-DD');
+      //   if (!labels.includes(createdAt)) {
+      //     labels.push(createdAt);
+      //   }
+      // });
+      // console.log(labels);
+
     },
     fillData(): void {
       this.datacollection = {
