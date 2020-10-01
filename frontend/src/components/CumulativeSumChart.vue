@@ -42,21 +42,42 @@ export default Vue.extend({
   },
   methods: {
     setDataCollection(timeline: Tweet[]): void {
-      const newTimeline = [ ...timeline ].reverse();
-      const labels: string[] = [];
-
-      const startDate: string = moment(newTimeline[0].createdAt).format('YYYY-MM-DD');
-      const endDate: string = moment(newTimeline[newTimeline.length-1].createdAt).format('YYYY-MM-DD');
+      const labels = this.getLabels(timeline);
+      const data = this.getData(timeline);
+      console.log(labels, data);
       
+    },
+    getLabels(timeline: Tweet[]): string[] {
+      const newTimeline = [ ...timeline ].reverse();
+      const firstTweetDate: Moment = moment(newTimeline[0].createdAt);
+      const today: Moment = moment();
 
-      // newTimeline.forEach(t => {
-      //   const createdAt = moment(t.createdAt, 'YYYY-MM-DD');
-      //   if (!labels.includes(createdAt)) {
-      //     labels.push(createdAt);
-      //   }
-      // });
-      // console.log(labels);
+      const labels: string[] = [firstTweetDate.format('YYYY-MM-DD')];
+      // 初めてツイートした日から今日までの日付を配列に挿入する
+      for (let i = 1; i <= Math.abs(firstTweetDate.diff(today, 'days')); i++) {
+        const iDate = firstTweetDate.clone();
+        labels.push(iDate.add(i, 'd').format('YYYY-MM-DD'));
+      }
 
+      return labels;
+    },
+    getData(timeline: Tweet[]): number[] {
+      const newTimeline = [ ...timeline ].reverse();
+      const firstTweetDate: Moment = moment(newTimeline[0].createdAt);
+      const today: Moment = moment();
+      const data: number[] =[];
+      let currentCount = 0;
+
+      for (let i = 0; i <= Math.abs(firstTweetDate.diff(today, 'days')); i++) {
+        const iDate = firstTweetDate.clone();
+        iDate.add(i, 'd');
+        currentCount += newTimeline.filter(nt => {
+          iDate.isSame(moment(nt.createdAt, 'YYYY-MM-DD'), 'day');
+        }).length;
+        data.push(currentCount);
+      }
+      
+      return data;
     },
     fillData(): void {
       this.datacollection = {
