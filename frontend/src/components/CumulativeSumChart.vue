@@ -14,6 +14,10 @@ type DataType = {
   datacollection: ChartData | null;
 }
 
+type LabelsAndData = {
+
+}
+
 type Tweet = {
   id: number;
   text: string;
@@ -34,7 +38,6 @@ export default Vue.extend({
     };
   },
   mounted(): void {
-    this.fillData();
     this.$store.watch(
       (state, getters) => getters["twitter/timeline"],
       (newValue) => this.setDataCollection(newValue)
@@ -42,57 +45,39 @@ export default Vue.extend({
   },
   methods: {
     setDataCollection(timeline: Tweet[]): void {
-      const labels = this.getLabels(timeline);
-      const data = this.getData(timeline);
-      console.log(labels, data);
-      
+      this.datacollection = this.getDataCollection(timeline);
     },
-    getLabels(timeline: Tweet[]): string[] {
-      const newTimeline = [ ...timeline ].reverse();
-      const firstTweetDate: Moment = moment(newTimeline[0].createdAt);
-      const today: Moment = moment();
-
-      const labels: string[] = [firstTweetDate.format('YYYY-MM-DD')];
-      // 初めてツイートした日から今日までの日付を配列に挿入する
-      for (let i = 1; i <= Math.abs(firstTweetDate.diff(today, 'days')); i++) {
-        const iDate = firstTweetDate.clone();
-        labels.push(iDate.add(i, 'd').format('YYYY-MM-DD'));
-      }
-
-      return labels;
-    },
-    getData(timeline: Tweet[]): number[] {
+    getDataCollection(timeline: Tweet[]): ChartData {
       const newTimeline = [ ...timeline ].reverse();
       const firstTweetDate: Moment = moment(newTimeline[0].createdAt);
       const today: Moment = moment();
       const data: number[] =[];
+      const labels: string[] = [];
       let currentCount = 0;
 
       for (let i = 0; i <= Math.abs(firstTweetDate.diff(today, 'days')); i++) {
-        const iDate = firstTweetDate.clone();
-        iDate.add(i, 'd');
+        let iDate = firstTweetDate.clone();
+        
+        // add i day
+        iDate = moment(iDate.add(i, 'd'));
+        labels.push(iDate.format('YYYY-MM-DD'));
+
         currentCount += newTimeline.filter(nt => {
-          iDate.isSame(moment(nt.createdAt, 'YYYY-MM-DD'), 'day');
+          return iDate.isSame(moment(nt.createdAt, 'YYYY-MM-DD'), 'day');
         }).length;
         data.push(currentCount);
       }
-      
-      return data;
-    },
-    fillData(): void {
-      this.datacollection = {
-        labels: ['1/1', '1/2', '1/3', '1/4'],
+
+      return {
+        labels: labels,
         datasets: [
           {
             label: 'Tweet',
             backgroundColor: '#007900',
-            data: [0, 1, 2, 3]
-          },
-        ],
+            data: data,
+          }
+        ]
       };
-    },
-    getRandomInt(): number {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
     },
   },
 });
