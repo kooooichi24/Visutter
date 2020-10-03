@@ -14,10 +14,6 @@ type DataType = {
   datacollection: ChartData | null;
 }
 
-type LabelsAndData = {
-
-}
-
 type Tweet = {
   id: number;
   text: string;
@@ -55,26 +51,30 @@ export default Vue.extend({
       const labels: string[] = [];
       let currentCount = 0;
 
-      for (let i = 0; i <= Math.abs(firstTweetDate.diff(today, 'days')); i++) {
-        let iDate = firstTweetDate.clone();
-        
-        // add i day
-        iDate = moment(iDate.add(i, 'd'));
-        labels.push(iDate.format('YYYY-MM-DD'));
+      // ツイート日をlabelsに代入する
+      newTimeline.forEach(nt => {
+        const createdAt = moment(nt.createdAt).format('YYYY-MM-DD');
+        if (!labels.includes(createdAt)) {
+          labels.push(createdAt);
+        }
+      })
 
+      // ツイート数をdataに代入する
+      labels.forEach(l => {
         currentCount += newTimeline.filter(nt => {
-          return iDate.isSame(moment(nt.createdAt, 'YYYY-MM-DD'), 'day');
+          return moment(l).isSame(moment(nt.createdAt), 'day');
         }).length;
         data.push(currentCount);
-      }
+      })
 
       return {
         labels: labels,
         datasets: [
           {
             label: 'Tweet',
-            backgroundColor: '#007900',
             data: data,
+            borderColor: '#2196F3',
+            borderWidth: 1,
           }
         ]
       };
