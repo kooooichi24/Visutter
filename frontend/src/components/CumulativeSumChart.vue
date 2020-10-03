@@ -46,7 +46,7 @@ export default Vue.extend({
     getDataCollection(timeline: Tweet[]): ChartData {
       const newTimeline = [ ...timeline ].reverse();
       const firstTweetDate: Moment = moment(newTimeline[0].createdAt);
-      const today: Moment = moment();
+      const today: string = moment().format('YYYY-MM-DD');
       const data: number[] =[];
       const labels: string[] = [];
       let currentCount = 0;
@@ -58,6 +58,10 @@ export default Vue.extend({
           labels.push(createdAt);
         }
       })
+      // 今日のツイートがない場合は、今日の日付を追加する
+      if (!labels.includes(today)) {
+        labels.push(today);
+      }
 
       // ツイート数をdataに代入する
       labels.forEach(l => {
@@ -66,6 +70,11 @@ export default Vue.extend({
         }).length;
         data.push(currentCount);
       })
+      // 今日のツイートがない場合は、今日の日付に現在のツイート数を追加する
+      if (!labels.includes(today)) {
+        data.push(currentCount);
+      }
+      
 
       return {
         labels: labels,
