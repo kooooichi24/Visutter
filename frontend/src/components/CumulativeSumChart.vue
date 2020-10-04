@@ -1,6 +1,6 @@
 <template>
   <div class="small">
-    <line-chart :chart-data="datacollection"></line-chart>
+    <line-chart :chart-data="datacollection" :options="options"></line-chart>
   </div>
 </template>
 
@@ -8,10 +8,11 @@
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
 import LineChart from './LineChart.vue'
-import { ChartData } from "chart.js";
+import { ChartData, ChartOptions } from "chart.js";
 
 type DataType = {
   datacollection: ChartData | null;
+  options: ChartOptions | null;
 }
 
 type Tweet = {
@@ -30,7 +31,8 @@ export default Vue.extend({
   },
   data(): DataType {
     return {
-      datacollection: null
+      datacollection: null,
+      options: null,
     };
   },
   mounted(): void {
@@ -42,26 +44,47 @@ export default Vue.extend({
   methods: {
     setDataCollection(timeline: Tweet[]): void {
       this.datacollection = this.getDataCollection(timeline);
+      this.options = {
+        scales: {
+          xAxes: [{
+            type: 'time',
+            time: {
+              unit: 'day',
+              displayFormats: {
+                day: 'YYYY-MM-DD'
+              },
+            },
+            ticks: {
+              maxRotation: 0,
+              minRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 3 //値の最大表示数
+            }
+          }]
+        }
+      }
     },
     getDataCollection(timeline: Tweet[]): ChartData {
       const newTimeline = [ ...timeline ].reverse();
-      const firstTweetDate: Moment = moment(newTimeline[0].createdAt);
-      const today: string = moment().format('YYYY-MM-DD');
       const data: number[] =[];
-      const labels: string[] = [];
+      const labels: Moment[] = [];
       let currentCount = 0;
-
+      
       // ツイート日をlabelsに代入する
       newTimeline.forEach(nt => {
-        const createdAt = moment(nt.createdAt).format('YYYY-MM-DD');
-        if (!labels.includes(createdAt)) {
+        const createdAt = moment(nt.createdAt, 'YYYY-MM-DD');
+        
+        // labelsにツイート日が存在していない場合追加する
+        let isCreatedAt = false;
+        labels.forEach(l => {
+          if (moment(l).isSame(createdAt, 'day')) {
+            isCreatedAt = true;
+          }
+        })
+        if (!isCreatedAt) {
           labels.push(createdAt);
         }
       })
-      // 今日のツイートがない場合は、今日の日付を追加する
-      if (!labels.includes(today)) {
-        labels.push(today);
-      }
 
       // ツイート数をdataに代入する
       labels.forEach(l => {
@@ -70,11 +93,6 @@ export default Vue.extend({
         }).length;
         data.push(currentCount);
       })
-      // 今日のツイートがない場合は、今日の日付に現在のツイート数を追加する
-      if (!labels.includes(today)) {
-        data.push(currentCount);
-      }
-      
 
       return {
         labels: labels,
