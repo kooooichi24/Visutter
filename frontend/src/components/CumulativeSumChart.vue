@@ -1,7 +1,9 @@
 <template>
-  <div class="small">
-    <line-chart :chart-data="datacollection" :options="options"></line-chart>
-  </div>
+  <v-container>
+    <div class="chart-container">
+      <line-chart :chart-data="datacollection" :options="options" :styles="chartStyles" />
+    </div>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -13,6 +15,12 @@ import { ChartData, ChartOptions } from "chart.js";
 type DataType = {
   datacollection: ChartData | null;
   options: ChartOptions | null;
+  chartStyles: ChartStyles;
+}
+
+type ChartStyles = {
+  width: string;
+  height: string;
 }
 
 type Tweet = {
@@ -33,6 +41,11 @@ export default Vue.extend({
     return {
       datacollection: null,
       options: null,
+      // チャートのスタイル: <canvas>のstyle属性として設定
+      chartStyles: {
+        height: "100%",
+        width: "100%"
+      }
     };
   },
   mounted(): void {
@@ -61,7 +74,16 @@ export default Vue.extend({
               maxTicksLimit: 3 //値の最大表示数
             }
           }]
-        }
+        },
+        maintainAspectRatio: false,
+        tooltips: {
+          mode: 'index',
+          intersect: false
+        },
+        hover: {
+          mode: 'index',
+          intersect: false
+        },
       }
     },
     getDataCollection(timeline: Tweet[]): ChartData {
@@ -110,9 +132,19 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-  .small {
-    max-width: 600px;
-    margin:  150px auto;
-  }
+<style lang="scss">
+.chart-container {
+  /**
+   * vue-chartjsで生成する<canvas>がabsoluteのため、
+   * relateveを設定
+   */
+  position: relative;
+
+  /**
+   * chartStylesを設定しているので、
+   * height/wightが有効になる
+   */
+  height: 40vh;
+  margin: 0 auto;
+}
 </style>
