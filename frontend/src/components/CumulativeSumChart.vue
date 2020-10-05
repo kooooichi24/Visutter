@@ -84,6 +84,9 @@ export default Vue.extend({
           mode: 'index',
           intersect: false
         },
+        legend: {
+          onClick: function () { return false }
+        }
       }
     },
     getDataCollection(timeline: Tweet[]): ChartData {
