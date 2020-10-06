@@ -78,7 +78,12 @@ export default Vue.extend({
         maintainAspectRatio: false,
         tooltips: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          callbacks: {
+            title: (tooltipItem) => {
+              return moment(tooltipItem[0].xLabel).format('YYYY-MM-DD');
+            }
+          }
         },
         hover: {
           mode: 'index',
