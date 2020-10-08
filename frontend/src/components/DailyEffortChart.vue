@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="chart-container">
-      <line-chart :chart-data="datacollection" :options="options" :styles="chartStyles" />
+      <bar-chart :chart-data="datacollection" :options="options" :styles="chartStyles" />
     </div>
   </v-container>
 </template>
@@ -9,7 +9,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import LineChart from './LineChart.vue'
+import BarChart from './BarChart.vue'
 import { ChartData, ChartOptions } from "chart.js";
 
 type DataType = {
@@ -33,9 +33,9 @@ type Tweet = {
 }
 
 export default Vue.extend({
-  name: 'CumulativeSum',
+  name: 'DailyEffortChart',
   components: {
-    LineChart
+    BarChart
   },
   data(): DataType {
     return {
@@ -73,6 +73,16 @@ export default Vue.extend({
               autoSkip: true,
               maxTicksLimit: 3 //値の最大表示数
             }
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              callback: (label) => {
+                if (Math.floor(Number(label)) === Number(label)) {
+                  return label;
+                }
+              }
+            }
           }]
         },
         maintainAspectRatio: false,
@@ -98,7 +108,7 @@ export default Vue.extend({
       const newTimeline = [ ...timeline ].reverse();
       const data: number[] =[];
       const labels: Moment[] = [];
-      let currentCount = 0;
+      // let currentCount = 0;
       
       // ツイート日をlabelsに代入する
       newTimeline.forEach(nt => {
@@ -118,10 +128,10 @@ export default Vue.extend({
 
       // ツイート数をdataに代入する
       labels.forEach(l => {
-        currentCount += newTimeline.filter(nt => {
+        const count = newTimeline.filter(nt => {
           return moment(l).isSame(moment(nt.createdAt), 'day');
         }).length;
-        data.push(currentCount);
+        data.push(count);
       })
 
       return {
