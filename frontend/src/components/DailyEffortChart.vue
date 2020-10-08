@@ -72,7 +72,8 @@ export default Vue.extend({
               minRotation: 0,
               autoSkip: true,
               maxTicksLimit: 3 //値の最大表示数
-            }
+            },
+            offset: true, // 余分なスペースが両端に追加され、軸はグラフ領域に収まるように拡大/縮小する
           }],
           yAxes: [{
             ticks: {
