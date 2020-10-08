@@ -131,7 +131,7 @@ export default Vue.extend({
             label: 'Tweet',
             data: data,
             borderColor: '#2196F3',
-            borderWidth: 1,
+            borderWidth: 2,
           }
         ]
       };
