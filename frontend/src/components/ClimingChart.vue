@@ -49,6 +49,8 @@ export default Vue.extend({
     };
   },
   mounted(): void {
+    this.setDataCollection(this.$store.getters["twitter/timeline"]);
+
     this.$store.watch(
       (state, getters) => getters["twitter/timeline"],
       (newValue) => this.setDataCollection(newValue)

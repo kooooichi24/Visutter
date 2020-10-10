@@ -10,6 +10,7 @@
           v-for="item in items"
           :key="item.text"
           link
+          @click="handlePath(item.path)"
         >
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>
@@ -36,7 +37,7 @@
             <v-list-item-title v-text="item.screenName"></v-list-item-title>
           </v-list-item>
         </v-list>
-        <v-list-item
+        <!-- <v-list-item
           class="mt-4"
           link
         >
@@ -50,7 +51,7 @@
             <v-icon color="grey darken-1">mdi-cog</v-icon>
           </v-list-item-action>
           <v-list-item-title class="grey--text text--darken-1">Manage Subscriptions</v-list-item-title>
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
     </v-navigation-drawer>
 
@@ -103,6 +104,7 @@ export type DataType = {
 export type Items = {
   icon: string;
   text: string;
+  path: string;
 }
 
 export type Items2 = {
@@ -117,9 +119,9 @@ export default Vue.extend({
       searchBy: null,
       drawer: null,
       items: [
-        { icon: 'mdi-view-dashboard-outline', text: 'Achievement' },
-        { icon: 'mdi-chart-multiline', text: 'Progress Charts' },
-        { icon: 'mdi-view-comfy', text: 'Heatmap' },
+        { icon: 'mdi-view-dashboard-outline', text: 'Achievement', path: '/' },
+        { icon: 'mdi-chart-multiline', text: 'Progress Charts', path: '/charts' },
+        { icon: 'mdi-view-comfy', text: 'Heatmap', path: '/heatmap' },
       ],
       items2: [
       ],
@@ -143,6 +145,12 @@ export default Vue.extend({
         this.$store.dispatch('twitter/searchScreenName', searchBy);
       }
     },
+    handlePath(path: string): void {
+      // Error: NavigationDuplicated を回避するためにパスが変更する際のみpushする
+      if (this.$route.path !== path) {
+        this.$router.push(path);
+      }
+    }
   },
 });
 </script>

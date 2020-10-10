@@ -96,6 +96,8 @@ export default Vue.extend({
     };
   },
   mounted(): void {
+    this.calcStatistics(this.$store.getters["twitter/timeline"]);
+
     this.$store.watch(
       (state, getters) => getters["twitter/timeline"],
       (newValue) => this.calcStatistics(newValue)

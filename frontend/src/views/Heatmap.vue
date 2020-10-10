@@ -1,17 +1,17 @@
 <template>
-  <div class="home">
-    <Achievement />
+  <div class="heatmap-page">
+    <Heatmap />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Achievement from '@/components/Achievement.vue';
+import Heatmap from '@/components/Heatmap.vue';
 
 export default Vue.extend({
-  name: 'Home',
+  name: 'HeatmapPage',
   components: {
-    Achievement,
+    Heatmap,
   },
 });
 </script>

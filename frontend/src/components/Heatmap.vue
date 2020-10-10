@@ -24,6 +24,8 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.setValues(this.$store.getters["twitter/timeline"]);
+
     this.$store.watch(
       (state, getters) => getters["twitter/timeline"],
       (newValue) => this.setValues(newValue)
