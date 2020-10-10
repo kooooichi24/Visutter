@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <calendar-heatmap :values="[{ date: '2018-9-21', count: 3 }, { date: '2018-9-22', count: 6 }]" :endDate="endDate" :range-color="['#E0E0E0', '#BBDEFB', '#64B5F6', '#1E88E5', '#0D47A1']" />
+    <calendar-heatmap :values="values" :endDate="endDate" :range-color="rangeColor" :max="max" />
   </v-container>
 </template>
 
@@ -19,9 +19,41 @@ export default Vue.extend({
     return {
       values: [],
       endDate: moment().format('YYYY-MM-DD'),
-      rangeColor: [],
+      rangeColor: ['#E0E0E0', '#BBDEFB', '#64B5F6', '#1E88E5', '#0D47A1'],
       max: 20,
+    }
+  },
+  mounted() {
+    this.$store.watch(
+      (state, getters) => getters["twitter/timeline"],
+      (newValue) => this.setValues(newValue)
+    );
+  },
+  methods: {
+    setValues(timeline) {
+      const newTimeline = [ ...timeline ].reverse();
+      newTimeline.forEach(nt => {
+        const createdAt = moment(nt.createdAt).format('YYYY-MM-DD');
+        
+        // valuesにツイート日が存在しているか判定する
+        let isCreatedAt = false;
+        this.values.forEach(v => {
+          if (v.date === createdAt) {
+            isCreatedAt = true;
 
+            // ツイート数をインクリメント
+            v.count += 1;
+          }
+        })
+
+        // 存在しない場合
+        if (!isCreatedAt) {
+          this.values.push({
+            date: createdAt,
+            count: 1,
+          });
+        }
+      })
     }
   }
 })
