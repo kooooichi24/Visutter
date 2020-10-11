@@ -50,11 +50,11 @@ export default Vue.extend({
   },
   mounted(): void {
     this.setDataCollection(this.$store.getters["twitter/timeline"]);
-
-    this.$store.watch(
-      (state, getters) => getters["twitter/timeline"],
-      (newValue) => this.setDataCollection(newValue)
-    );
+  },
+  watch: {
+    "$store.state.twitter.timeline"(nv) {
+      this.setDataCollection(nv)
+    }
   },
   methods: {
     setDataCollection(timeline: Tweet[]): void {
