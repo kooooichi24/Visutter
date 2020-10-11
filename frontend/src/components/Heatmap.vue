@@ -25,14 +25,17 @@ export default Vue.extend({
   },
   mounted() {
     this.setValues(this.$store.getters["twitter/timeline"]);
-
-    this.$store.watch(
-      (state, getters) => getters["twitter/timeline"],
-      (newValue) => this.setValues(newValue)
-    );
+  },
+  watch: {
+    "$store.state.twitter.timeline"(nv) {
+      this.setValues(nv)
+    }
   },
   methods: {
     setValues(timeline) {
+      // 初期化
+      this.values = [];
+      
       const newTimeline = [ ...timeline ].reverse();
       newTimeline.forEach(nt => {
         const createdAt = moment(nt.createdAt).format('YYYY-MM-DD');
