@@ -3,7 +3,6 @@ export interface RootState {
 }
 
 export interface TwitterState {
-  tweets: Tweet[];
   timeline: Tweet[];
   user: User[];
 }
