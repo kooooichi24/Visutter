@@ -27,6 +27,7 @@
             v-for="item in items2"
             :key="item.text"
             link
+            @click="changeUser(item.screenName)"
           >
             <v-list-item-avatar>
               <img
@@ -109,7 +110,7 @@ export type Items = {
 
 export type Items2 = {
   profileImageUrlHttps: string;
-  screeenName: string;
+  screenName: string;
 }
 
 export default Vue.extend({
@@ -150,6 +151,9 @@ export default Vue.extend({
       if (this.$route.path !== path) {
         this.$router.push(path);
       }
+    },
+    changeUser(screenName: string): void {
+      this.$store.dispatch('twitter/setTimeline', screenName);
     }
   },
 });

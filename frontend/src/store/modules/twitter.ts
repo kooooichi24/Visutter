@@ -5,6 +5,7 @@ import { TwitterState, RootState, Tweet, User } from '@/store/types';
 const state: TwitterState = {
   timeline: [],
   user: [],
+  timeline2: null,
 };
 
 const getters: GetterTree<TwitterState, RootState> = {
@@ -13,7 +14,10 @@ const getters: GetterTree<TwitterState, RootState> = {
   },
   user: (state: TwitterState) => {
     return state.user;
-  }
+  },
+  timeline2: (state: TwitterState) => {
+    return state.timeline2;
+  },
 };
 
 const mutations: MutationTree<TwitterState> = {
@@ -22,6 +26,10 @@ const mutations: MutationTree<TwitterState> = {
   },
   addUser: (state, user: User) => {
     state.user.push(user);
+  },
+  addTimeline: (state, timeline: Tweet[]) => {
+    // ユーザがtimelineに存在しない場合、追加
+    // if ()
   }
 }
 
