@@ -1,11 +1,11 @@
 import { Module, GetterTree, ActionTree, MutationTree } from 'vuex';
 import axios from 'axios';
-import { TwitterState, RootState, Tweet, User } from '@/store/types';
+import { TwitterState, RootState, Tweet, User, Timeline } from '@/store/types';
 
 const state: TwitterState = {
   timeline: [],
   user: [],
-  timeline2: null,
+  timeline2: [],
 };
 
 const getters: GetterTree<TwitterState, RootState> = {
@@ -27,9 +27,20 @@ const mutations: MutationTree<TwitterState> = {
   addUser: (state, user: User) => {
     state.user.push(user);
   },
-  addTimeline: (state, timeline: Tweet[]) => {
+  addTimeline: (state, timeline: Timeline) => {
     // ユーザがtimelineに存在しない場合、追加
-    // if ()
+    console.log(timeline);
+    
+    // if (!(Object.prototype.hasOwnProperty.call(state.timeline2, timeline.screenName))) {
+    //   const addedTimeline: Timeline = {
+    //     screenName: timeline.screenName,
+    //     tweets: timeline.tweets
+    //   }
+
+    //   state.timeline2.push(addedTimeline);
+    // } else {
+    //   console.log("can't find user");
+    // }
   }
 }
 

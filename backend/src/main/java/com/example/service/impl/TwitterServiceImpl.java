@@ -6,13 +6,7 @@ import twitter4j.*;
 
 @Service
 public class TwitterServiceImpl implements TwitterService {
-
-//    @Override
-//    public User verifyCredentials() throws TwitterException {
-//        Twitter twitter = TwitterFactory.getSingleton();
-//        return twitter.verifyCredentials();
-//    }
-
+    
     @Override
     public ResponseList<Status> getAllUserTimeline(String screenName) throws TwitterException {
         Twitter twitter = TwitterFactory.getSingleton();

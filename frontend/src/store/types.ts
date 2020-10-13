@@ -5,12 +5,12 @@ export interface RootState {
 export interface TwitterState {
   timeline: Tweet[];
   user: User[];
-  timeline2: Timeline | null;
+  timeline2: Timeline[];
 }
 
 export interface Timeline {
   screenName: string;
-  timeline: Tweet[];
+  tweets: Tweet[];
 }
 
 export interface Tweet {

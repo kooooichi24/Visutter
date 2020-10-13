@@ -25,6 +25,12 @@ export default Vue.extend({
   },
   mounted() {
     this.setValues(this.$store.getters["twitter/timeline"]);
+    this.$store.commit('twitter/addTimeline', { 
+      screenName: 'hoge', 
+      tweets: [
+        { id: 1, text: "text", createdAt: "createdAt", favoriteCount: 1, retweetCount: 1, isRetweeted: false }
+      ] 
+    })
   },
   watch: {
     "$store.state.twitter.timeline"(nv) {
