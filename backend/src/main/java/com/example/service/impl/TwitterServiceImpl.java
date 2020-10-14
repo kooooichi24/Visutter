@@ -13,7 +13,7 @@ public class TwitterServiceImpl implements TwitterService {
         Twitter twitter = TwitterFactory.getSingleton();
         User user = twitter.showUser(screenName);
         Integer statusesCount = user.getStatusesCount();
-//        Map<String ,RateLimitStatus> rateLimitStatus = twitter.getRateLimitStatus();
+        Integer beforeStatuseSize = 0;
 
         Integer page = 1;
         final Integer COUNT_MAX = 200; // Pagingを用いたgetUserTimelineの最大取得数は200件な仕様らしい
@@ -30,23 +30,31 @@ public class TwitterServiceImpl implements TwitterService {
                 }
                 page += 1;
 
-                // 全件取得したら終了
-                if (statuses.size() == statusesCount) {
+                /**
+                 * ユーザーのツイートを全て取得したかどうかの判定
+                 * Twitterの仕様上、ユーザのツイートにはリツイートも含む
+                 * しかし、ユーザーがリツイートしたアカウントが鍵垢の場合は、本APIでは取得不可である
+                 * つまり、ユーザーの全てのツイートを本APIで取得することは実現不可能である
+                 * そのため、取得ツイート数が変化しないこと確認できたならば、取得可能なツイートを全て取得できたこととする
+                 *
+                 * 比較対象
+                 * - 取得後のツイート数
+                 * - 取得前のツイート数
+                 * */
+                if (statuses.size() == beforeStatuseSize) {
                     break;
+                } else {
+                    beforeStatuseSize = statuses.size();
                 }
+
             } catch(TwitterException twitterException) {
                 // Rate Limit に引っかかった場合の処理
-                // (メモ) status code も併せてチェックすべきか？！
-
                 RateLimitStatus rateLimit = twitterException.getRateLimitStatus();
                 int secondsUntilReset = rateLimit.getSecondsUntilReset();
                 System.err.println("please wait for " + secondsUntilReset + " seconds");
-//                System.err.println("Reset Time : " +  rateLimit.getResetTime());
+                System.err.println("Reset Time : " +  rateLimit.getResetTimeInSeconds());
 
-                //(注) 120秒間，水増し・・getSecondsUntilReset() の返す値が負の
-                //場合があり，それに対応するため
-                // long waitTime = (long)(secondsUntilReset + 120) * 1000;
-                long waitTime = (long)(3 * 1000); // 300秒待ち
+                long waitTime = (long)(3 * 1000); // 3秒待ち
                 try {
                     Thread.sleep(waitTime);
                 } catch(Exception e){
