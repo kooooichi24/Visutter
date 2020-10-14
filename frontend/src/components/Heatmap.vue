@@ -26,11 +26,17 @@ export default Vue.extend({
   mounted() {
     this.setValues(this.$store.getters["twitter/timeline"]);
     this.$store.commit('twitter/addTimeline', { 
-      screenName: 'hoge', 
+      screenName: 'foo', 
       tweets: [
-        { id: 1, text: "text", createdAt: "createdAt", favoriteCount: 1, retweetCount: 1, isRetweeted: false }
-      ] 
-    })
+        { id: 1, text: "text1", createdAt: "createdAt1", favoriteCount: 1, retweetCount: 1, isRetweeted: false }
+      ],
+    });
+    this.$store.commit('twitter/addTimeline', { 
+      screenName: 'bar', 
+      tweets: [
+        { id: 2, text: "text2", createdAt: "createdAt2", favoriteCount: 2, retweetCount: 2, isRetweeted: false }
+      ],
+    });
   },
   watch: {
     "$store.state.twitter.timeline"(nv) {
