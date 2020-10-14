@@ -3,7 +3,6 @@ package com.example.service.impl;
 import com.example.service.TwitterService;
 import org.springframework.stereotype.Service;
 import twitter4j.*;
-import java.util.Map;
 
 @Service
 public class TwitterServiceImpl implements TwitterService {
@@ -54,7 +53,7 @@ public class TwitterServiceImpl implements TwitterService {
                 System.err.println("please wait for " + secondsUntilReset + " seconds");
                 System.err.println("Reset Time : " +  rateLimit.getResetTimeInSeconds());
 
-                long waitTime = (long)(3 * 1000); // 3秒待ち
+                long waitTime = (long)(300 * 1000); // 300秒待ち
                 try {
                     Thread.sleep(waitTime);
                 } catch(Exception e){
