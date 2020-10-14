@@ -13,7 +13,7 @@ public class TwitterServiceImpl implements TwitterService {
         Twitter twitter = TwitterFactory.getSingleton();
         User user = twitter.showUser(screenName);
         Integer statusesCount = user.getStatusesCount();
-        Integer beforeStatuseSize = 0;
+        Integer beforeStatusSize = 0;
 
         Integer page = 1;
         final Integer COUNT_MAX = 200; // Pagingを用いたgetUserTimelineの最大取得数は200件な仕様らしい
@@ -41,10 +41,10 @@ public class TwitterServiceImpl implements TwitterService {
                  * - 取得後のツイート数
                  * - 取得前のツイート数
                  * */
-                if (statuses.size() == beforeStatuseSize) {
+                if (statuses.size() == beforeStatusSize) {
                     break;
                 } else {
-                    beforeStatuseSize = statuses.size();
+                    beforeStatusSize = statuses.size();
                 }
 
             } catch(TwitterException twitterException) {
