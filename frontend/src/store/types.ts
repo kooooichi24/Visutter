@@ -6,6 +6,7 @@ export interface TwitterState {
   timeline: Tweet[];
   user: User[];
   timeline2: Timeline[];
+  currentSearchScreenName: string;
 }
 
 export interface Timeline {

@@ -143,6 +143,7 @@ export default Vue.extend({
     searchByUser(searchBy: string): void {
       if (searchBy !== null) {
         this.$store.dispatch('twitter/setTimeline', searchBy);
+        this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
         this.$store.dispatch('twitter/searchScreenName', searchBy);
       }
     },
@@ -153,7 +154,8 @@ export default Vue.extend({
       }
     },
     changeUser(screenName: string): void {
-      this.$store.dispatch('twitter/setTimeline', screenName);
+      this.$store.commit('twitter/setCurrentSearchScreenName', screenName);
+      // this.$store.dispatch('twitter/setTimeline', screenName);
     }
   },
 });

@@ -23,6 +23,11 @@ type ChartStyles = {
   height: string;
 }
 
+type Timeline = {
+  screenName: string;
+  tweets: Tweet[];
+}
+
 type Tweet = {
   id: number;
   text: string;
@@ -49,14 +54,24 @@ export default Vue.extend({
     };
   },
   mounted(): void {
-    this.setDataCollection(this.$store.getters["twitter/timeline"]);
+    // this.setDataCollection(this.$store.getters["twitter/timeline"]);
+    this.setDetaCollection(this.getTimelineByCurrentScreenName());
   },
   watch: {
-    "$store.state.twitter.timeline"(nv) {
-      this.setDataCollection(nv)
+    "$store.state.twitter.timeline2"() {
+      this.setDetaCollection(this.getTimelineByCurrentScreenName());
     }
   },
   methods: {
+    getTimelineByCurrentScreenName(): Tweet[] {
+      const currentSearchScreenName: string = this.$store.getters["twitter/currentSearchScreenName"];
+      const timeline: Tweet[] = this.$store.getters["twitter/timeline2"]
+                                    .filter((tl: Timeline) => {
+                                      return tl.screenName === currentSearchScreenName;
+                                    })[0].tweets;
+
+      return timeline;
+    },
     setDataCollection(timeline: Tweet[]): void {
       this.datacollection = this.getDataCollection(timeline);
       this.options = {

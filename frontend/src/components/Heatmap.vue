@@ -24,26 +24,23 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.setValues(this.$store.getters["twitter/timeline"]);
-    this.$store.commit('twitter/addTimeline', { 
-      screenName: 'foo', 
-      tweets: [
-        { id: 1, text: "text1", createdAt: "createdAt1", favoriteCount: 1, retweetCount: 1, isRetweeted: false }
-      ],
-    });
-    this.$store.commit('twitter/addTimeline', { 
-      screenName: 'bar', 
-      tweets: [
-        { id: 2, text: "text2", createdAt: "createdAt2", favoriteCount: 2, retweetCount: 2, isRetweeted: false }
-      ],
-    });
+    this.setValues(this.getTimelineByCurrentScreenName());
   },
   watch: {
-    "$store.state.twitter.timeline"(nv) {
-      this.setValues(nv)
+    "$store.state.twitter.timeline2"() {
+      this.setValues(this.getTimelineByCurrentScreenName());
     }
   },
   methods: {
+    getTimelineByCurrentScreenName() {
+      const currentSearchScreenName = this.$store.getters["twitter/currentSearchScreenName"];
+      const timeline = this.$store.getters["twitter/timeline2"]
+                                  .filter(tl => {
+                                    return tl.screenName === currentSearchScreenName;
+                                  })[0].tweets;
+
+      return timeline;
+    },
     setValues(timeline) {
       // 初期化
       this.values = [];
