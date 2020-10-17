@@ -24,23 +24,26 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.setValues(this.getTimelineByCurrentScreenName());
+    const timelineByCurrentScreenName = this.$store.getters["twitter/timelineByCurrentScreenName"];
+    this.setValues(timelineByCurrentScreenName);
   },
   watch: {
-    "$store.state.twitter.timeline2"() {
-      this.setValues(this.getTimelineByCurrentScreenName());
+    "$store.state.twitter.timeline"() {
+      const timelineByCurrentScreenName = this.$store.getters["twitter/timelineByCurrentScreenName"];
+      this.setValues(timelineByCurrentScreenName);
+    },
+    "$store.state.twitter.currentSearchScreenName"(newValue) {
+      const isExists = this.$store.getters["twitter/timeline"].some(el => {
+        return el.screenName === newValue;
+      });
+
+      if (isExists) {
+        const timelineByCurrentScreenName = this.$store.getters["twitter/timelineByCurrentScreenName"];
+        this.setValues(timelineByCurrentScreenName);
+      }
     }
   },
   methods: {
-    getTimelineByCurrentScreenName() {
-      const currentSearchScreenName = this.$store.getters["twitter/currentSearchScreenName"];
-      const timeline = this.$store.getters["twitter/timeline2"]
-                                  .filter(tl => {
-                                    return tl.screenName === currentSearchScreenName;
-                                  })[0].tweets;
-
-      return timeline;
-    },
     setValues(timeline) {
       // 初期化
       this.values = [];

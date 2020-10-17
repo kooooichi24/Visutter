@@ -3,9 +3,8 @@ export interface RootState {
 }
 
 export interface TwitterState {
-  timeline: Tweet[];
   user: User[];
-  timeline2: Timeline[];
+  timeline: Timeline[];
   currentSearchScreenName: string;
 }
 

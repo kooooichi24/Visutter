@@ -54,24 +54,35 @@ export default Vue.extend({
     };
   },
   mounted(): void {
-    // this.setDataCollection(this.$store.getters["twitter/timeline"]);
-    this.setDetaCollection(this.getTimelineByCurrentScreenName());
+    const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
+    this.setDataCollection(timelineByCurrentScreenName);
   },
   watch: {
-    "$store.state.twitter.timeline2"() {
-      this.setDetaCollection(this.getTimelineByCurrentScreenName());
-    }
+    "$store.state.twitter.timeline"() {
+      const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
+      this.setDataCollection(timelineByCurrentScreenName);
+    },
+    /**
+     * screenNameが変更された、かつ、vuexのtimelineにscreenNameのオブジェクトが格納されている状態で処理を行う
+     * screenNameが変更されるシナリオは以下の2つ
+     * 1. 検索バーにscreenNameが入力され、検索されたとき
+     * 2. ナビゲーションバーの異なるユーザアイコンを選択したとき
+     * 
+     * シナリオ1の場合は、screenNameとtimelineの両方が変更される。
+     * そのため、timelineにtwitterから取得してきたデータが格納された後に処理を行う必要がある
+     */
+    "$store.state.twitter.currentSearchScreenName"(newValue) {
+      const isExists: boolean = this.$store.getters["twitter/timeline"].some((el: Timeline) => {
+        return el.screenName === newValue;
+      });
+
+      if (isExists) {
+        const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
+        this.setDataCollection(timelineByCurrentScreenName);
+      }
+    },
   },
   methods: {
-    getTimelineByCurrentScreenName(): Tweet[] {
-      const currentSearchScreenName: string = this.$store.getters["twitter/currentSearchScreenName"];
-      const timeline: Tweet[] = this.$store.getters["twitter/timeline2"]
-                                    .filter((tl: Timeline) => {
-                                      return tl.screenName === currentSearchScreenName;
-                                    })[0].tweets;
-
-      return timeline;
-    },
     setDataCollection(timeline: Tweet[]): void {
       this.datacollection = this.getDataCollection(timeline);
       this.options = {
