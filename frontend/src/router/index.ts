@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import Home from '../views/Home.vue';
-import Heatmap from '../views/Heatmap.vue';
+import Achievement from '../views/Achievement.vue';
 import Charts from '../views/Charts.vue';
 
 Vue.use(VueRouter);
@@ -13,9 +13,9 @@ Vue.use(VueRouter);
     component: Home
   },
   {
-    path: '/heatmap',
-    name: 'Heatmap',
-    component: Heatmap
+    path: '/achievement',
+    name: 'Achievement',
+    component: Achievement
   },
   {
     path: '/charts',

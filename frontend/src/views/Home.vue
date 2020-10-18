@@ -1,17 +1,14 @@
 <template>
   <div class="home">
-    <Achievement />
+    This is Home View Components.
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Achievement from '@/components/Achievement.vue';
 
 export default Vue.extend({
   name: 'Home',
-  components: {
-    Achievement,
-  },
+  components: {},
 });
 </script>

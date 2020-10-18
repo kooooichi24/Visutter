@@ -6,21 +6,23 @@
       clipped
     >
       <v-list dense>
-        <v-list-item
-          v-for="item in items"
-          :key="item.text"
-          link
-          @click="handlePath(item.path)"
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>
-              {{ item.text }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item-group v-model="model" mandatory color="blue lighten-2">
+          <v-list-item
+            v-for="item in items"
+            :key="item.text"
+            link
+            @click="handlePath(item.path)"
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
         <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader>
         <v-list>
           <v-list-item
@@ -124,14 +126,19 @@ export default Vue.extend({
       searchBy: null,
       drawer: null,
       items: [
-        { icon: 'mdi-view-dashboard-outline', text: 'Achievement', path: '/' },
+        { icon: 'mdi-view-dashboard-outline', text: 'Home', path: '/' },
+        { icon: 'mdi-view-comfy', text: 'Achievement', path: '/achievement' },
         { icon: 'mdi-chart-multiline', text: 'Progress Charts', path: '/charts' },
-        { icon: 'mdi-view-comfy', text: 'Heatmap', path: '/heatmap' },
       ],
       items2: [
       ],
       alert: false,
     };
+  },
+  computed: {
+    model(): number {
+      return this.items.findIndex(item => item.path === this.$route.path);
+    }
   },
   created(): void {
     this.$vuetify.theme.dark = true
