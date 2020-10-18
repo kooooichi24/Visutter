@@ -70,14 +70,23 @@
     </v-app-bar>
 
     <v-main>
-      <div class="alert">
-        <v-alert
-          v-model="alert"
-          dismissible
-          type="error"
-          transition="slide-x-reverse-transition"
-        >User Not Found</v-alert>
-      </div>
+      <v-container class="alert">
+        <v-row justify="end">
+          <v-col
+            cols="12"
+            xs="12"
+            sm="4"
+            xl="3"
+          >
+            <v-alert
+              v-model="alert"
+              dismissible
+              type="error"
+              transition="slide-x-reverse-transition"
+            >User Not Found</v-alert>
+          </v-col>
+        </v-row>
+      </v-container>
       
       <!-- ルートアウトレット -->
       <!-- ルートとマッチしたコンポーネントがここへ描画されます -->
@@ -183,9 +192,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .alert {
-  width: 30%;
   position: fixed;
-  right: 10px;
+  right: 0;
   bottom: 0;
   z-index: 100;
 }
