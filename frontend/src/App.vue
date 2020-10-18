@@ -139,8 +139,10 @@ export default Vue.extend({
     searchByUser(searchBy: string): void {
       if (searchBy !== null) {
         // this.$store.dispatch('twitter/setTimeline', searchBy);
-        this.$store.dispatch('twitter/searchScreenName', searchBy)
-          .then()
+        this.$store.dispatch('twitter/setTimeline', searchBy)
+          .then(() => {
+            this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
+          })
           .catch(() => {
             this.alert = true;
 
@@ -149,7 +151,21 @@ export default Vue.extend({
               this.alert = false
             }, 5000);
           })
-        // this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
+
+
+        this.$store.dispatch('twitter/searchScreenName', searchBy)
+          .then(() => {
+            this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
+          })
+          .catch(() => {
+            this.alert = true;
+
+            // 5秒後にalertを非表示にする
+            setTimeout(() => {
+              this.alert = false
+            }, 5000);
+          })
+        
       }
     },
     handlePath(path: string): void {
@@ -166,13 +182,11 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.v-main {
-  position: relative;
-}
 .alert {
   width: 30%;
-  position: absolute;
+  position: fixed;
   right: 10px;
   bottom: 0;
+  z-index: 100;
 }
 </style>

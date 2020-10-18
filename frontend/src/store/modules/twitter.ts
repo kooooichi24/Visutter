@@ -40,18 +40,38 @@ const mutations: MutationTree<TwitterState> = {
 }
 
 const actions: ActionTree<TwitterState, RootState> = {
-  setTimeline: async ({ commit }, screenName: string) => {
-    const isExists: boolean = state.timeline.some(el => {
-      return el.screenName === screenName;
-    });
-    if (!isExists) {
-      const timeline = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/timeline?screenName=${screenName}` }).catch((error) => error)
-      const payload: Timeline = {
-        screenName: screenName,
-        tweets: timeline.data
+  setTimeline: ({ commit }, screenName: string) => {
+    return new Promise((resolve, reject) => {
+      const isExists: boolean = state.timeline.some(el => {
+        return el.screenName === screenName;
+      });
+
+      if (!isExists) {
+        axios.get(`http://localhost:8080/api/twt/timeline?screenName=${screenName}`)
+          .then(res => {
+            const payload: Timeline = {
+              screenName: screenName,
+              tweets: res.data
+            };
+            commit('addTimeline', payload);
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err.response);
+          })
       }
-      commit('addTimeline', payload);
-    }
+    });
+    // const isExists: boolean = state.timeline.some(el => {
+    //   return el.screenName === screenName;
+    // });
+    // if (!isExists) {
+    //   const timeline = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/timeline?screenName=${screenName}` }).catch((error) => error)
+    //   const payload: Timeline = {
+    //     screenName: screenName,
+    //     tweets: timeline.data
+    //   }
+    //   commit('addTimeline', payload);
+    // }
   },
   searchScreenName: ({ commit }, screenName: string) => {
     return new Promise((resolve, reject) => {
