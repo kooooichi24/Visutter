@@ -40,13 +40,25 @@ const mutations: MutationTree<TwitterState> = {
 }
 
 const actions: ActionTree<TwitterState, RootState> = {
-  setTimeline: ({ commit }, screenName: string) => {
+  searchByScreenName: ({ commit }, screenName: string) => {
     return new Promise((resolve, reject) => {
-      const isExists: boolean = state.timeline.some(el => {
-        return el.screenName === screenName;
-      });
+      // 入力されたスクリーンネームが検索済みか判定
+      const isUserExists: boolean = state.user.some(u => u.screenName === screenName);
+      const isTimelineExists: boolean = state.timeline.some(el => el.screenName === screenName);
 
-      if (!isExists) {
+      // 未検索の場合
+      if (!isUserExists && !isTimelineExists) {
+        // userを検索
+        axios.get(`http://localhost:8080/api/twt/user?screenName=${screenName}`)
+          .then(res => {
+            commit('addUser', res.data);
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err.response)
+          })
+        
+        // timelineを検索
         axios.get(`http://localhost:8080/api/twt/timeline?screenName=${screenName}`)
           .then(res => {
             const payload: Timeline = {
@@ -61,51 +73,7 @@ const actions: ActionTree<TwitterState, RootState> = {
           })
       }
     });
-    // const isExists: boolean = state.timeline.some(el => {
-    //   return el.screenName === screenName;
-    // });
-    // if (!isExists) {
-    //   const timeline = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/timeline?screenName=${screenName}` }).catch((error) => error)
-    //   const payload: Timeline = {
-    //     screenName: screenName,
-    //     tweets: timeline.data
-    //   }
-    //   commit('addTimeline', payload);
-    // }
   },
-  searchScreenName: ({ commit }, screenName: string) => {
-    return new Promise((resolve, reject) => {
-      if (state.user.find(u => u.screenName === screenName) === undefined) {
-        axios
-          .get(`http://localhost:8080/api/twt/user?screenName=${screenName}`)
-          .then(res => {
-            commit('addUser', res.data);
-            resolve(res.data);
-          })
-          .catch(err => {
-            reject(err.response)
-          })
-      }
-    });
-    // if (state.user.find(u => u.screenName === screenName) === undefined) {
-    //   // const user = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/user?screenName=${screenName}` }).catch((error) => error)
-    //   // commit('addUser', user.data);
-
-    //   axios
-    //     .get(`http://localhost:8080/api/twt/user?screenName=${screenName}`)
-    //     .then(res => {
-    //       commit('addUser', res.data);
-    //     })
-    //     .catch(err => {
-    //       throw err;
-    //     })
-    //   // try {
-    //   //   const user = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/user?screenName=${screenName}` })
-    //   // } catch(error) {
-    //   //   return error.reponse.data.message;
-    //   // }
-    // }
-  }
 };
 
 

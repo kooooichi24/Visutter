@@ -147,34 +147,17 @@ export default Vue.extend({
   methods: {
     searchByUser(searchBy: string): void {
       if (searchBy !== null) {
-        // this.$store.dispatch('twitter/setTimeline', searchBy);
-        this.$store.dispatch('twitter/setTimeline', searchBy)
+        this.$store.dispatch('twitter/searchByScreenName', searchBy)
           .then(() => {
             this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
           })
           .catch(() => {
             this.alert = true;
-
             // 5秒後にalertを非表示にする
             setTimeout(() => {
               this.alert = false
             }, 5000);
           })
-
-
-        this.$store.dispatch('twitter/searchScreenName', searchBy)
-          .then(() => {
-            this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
-          })
-          .catch(() => {
-            this.alert = true;
-
-            // 5秒後にalertを非表示にする
-            setTimeout(() => {
-              this.alert = false
-            }, 5000);
-          })
-        
       }
     },
     handlePath(path: string): void {
