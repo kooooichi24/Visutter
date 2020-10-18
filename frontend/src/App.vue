@@ -106,6 +106,7 @@ export type DataType = {
   items: Items[];
   items2: Items2[];
   alert: boolean;
+  model: number;
 }
 
 export type Items = {
@@ -133,11 +134,12 @@ export default Vue.extend({
       items2: [
       ],
       alert: false,
+      model: 0, // ナビゲーションバー選択用
     };
   },
-  computed: {
-    model(): number {
-      return this.items.findIndex(item => item.path === this.$route.path);
+  watch: {
+    $route (to, from) {
+      this.model = this.items.findIndex(item => item.path === from.path);
     }
   },
   created(): void {
@@ -150,6 +152,8 @@ export default Vue.extend({
         this.items2 = newValue
       }
     );
+
+    this.model = this.items.findIndex(item => item.path === this.$route.path);
   },
   methods: {
     searchByUser(searchBy: string): void {
