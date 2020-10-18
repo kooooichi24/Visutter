@@ -38,21 +38,6 @@
             <v-list-item-title v-text="item.screenName"></v-list-item-title>
           </v-list-item>
         </v-list>
-        <!-- <v-list-item
-          class="mt-4"
-          link
-        >
-          <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-plus-circle-outline</v-icon>
-          </v-list-item-action>
-          <v-list-item-title class="grey--text text--darken-1">Browse Channels</v-list-item-title>
-        </v-list-item>
-        <v-list-item link>
-          <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-cog</v-icon>
-          </v-list-item-action>
-          <v-list-item-title class="grey--text text--darken-1">Manage Subscriptions</v-list-item-title>
-        </v-list-item> -->
       </v-list>
     </v-navigation-drawer>
 
@@ -85,6 +70,15 @@
     </v-app-bar>
 
     <v-main>
+      <div class="alert">
+        <v-alert
+          v-model="alert"
+          dismissible
+          type="error"
+          transition="slide-x-reverse-transition"
+        >User Not Found</v-alert>
+      </div>
+      
       <!-- ルートアウトレット -->
       <!-- ルートとマッチしたコンポーネントがここへ描画されます -->
       <router-view></router-view>
@@ -100,6 +94,7 @@ export type DataType = {
   drawer: boolean | null;
   items: Items[];
   items2: Items2[];
+  alert: boolean;
 }
 
 export type Items = {
@@ -126,6 +121,7 @@ export default Vue.extend({
       ],
       items2: [
       ],
+      alert: false,
     };
   },
   created(): void {
@@ -142,9 +138,18 @@ export default Vue.extend({
   methods: {
     searchByUser(searchBy: string): void {
       if (searchBy !== null) {
-        this.$store.dispatch('twitter/setTimeline', searchBy);
-        this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
-        this.$store.dispatch('twitter/searchScreenName', searchBy);
+        // this.$store.dispatch('twitter/setTimeline', searchBy);
+        this.$store.dispatch('twitter/searchScreenName', searchBy)
+          .then()
+          .catch(() => {
+            this.alert = true;
+
+            // 5秒後にalertを非表示にする
+            setTimeout(() => {
+              this.alert = false
+            }, 5000);
+          })
+        // this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
       }
     },
     handlePath(path: string): void {
@@ -155,8 +160,19 @@ export default Vue.extend({
     },
     changeUser(screenName: string): void {
       this.$store.commit('twitter/setCurrentSearchScreenName', screenName);
-      // this.$store.dispatch('twitter/setTimeline', screenName);
     }
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.v-main {
+  position: relative;
+}
+.alert {
+  width: 30%;
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+}
+</style>

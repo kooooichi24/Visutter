@@ -3,8 +3,6 @@ package com.example.web.rest;
 import com.example.service.TwitterService;
 import com.example.web.response.TimelineResponse;
 import com.example.web.response.UserResponse;
-import org.springframework.lang.NonNull;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import twitter4j.*;
@@ -23,8 +21,7 @@ public class TwitterRestController {
 
     @GetMapping("/user")
     public UserResponse user(@RequestParam("screenName") String screenName) throws TwitterException {
-        Twitter twitter = TwitterFactory.getSingleton();
-        User user = twitter.showUser(screenName);
+        User user = twitterService.showUser(screenName);
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
     }

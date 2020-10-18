@@ -53,11 +53,38 @@ const actions: ActionTree<TwitterState, RootState> = {
       commit('addTimeline', payload);
     }
   },
-  searchScreenName: async ({ commit }, screenName: string) => {
-    if (state.user.find(u => u.screenName === screenName) === undefined) {
-      const user = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/user?screenName=${screenName}` }).catch((error) => error)
-      commit('addUser', user.data); 
-    }
+  searchScreenName: ({ commit }, screenName: string) => {
+    return new Promise((resolve, reject) => {
+      if (state.user.find(u => u.screenName === screenName) === undefined) {
+        axios
+          .get(`http://localhost:8080/api/twt/user?screenName=${screenName}`)
+          .then(res => {
+            commit('addUser', res.data);
+            resolve(res.data);
+          })
+          .catch(err => {
+            reject(err.response)
+          })
+      }
+    });
+    // if (state.user.find(u => u.screenName === screenName) === undefined) {
+    //   // const user = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/user?screenName=${screenName}` }).catch((error) => error)
+    //   // commit('addUser', user.data);
+
+    //   axios
+    //     .get(`http://localhost:8080/api/twt/user?screenName=${screenName}`)
+    //     .then(res => {
+    //       commit('addUser', res.data);
+    //     })
+    //     .catch(err => {
+    //       throw err;
+    //     })
+    //   // try {
+    //   //   const user = await axios({ method: 'GET', url: `http://localhost:8080/api/twt/user?screenName=${screenName}` })
+    //   // } catch(error) {
+    //   //   return error.reponse.data.message;
+    //   // }
+    // }
   }
 };
 
