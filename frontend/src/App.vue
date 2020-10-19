@@ -5,7 +5,7 @@
       app
       clipped
     >
-      <v-list dense>
+      <v-list dense :disabled="neverSearch">
         <v-list-item-group v-model="model" mandatory color="blue lighten-2">
           <v-list-item
             v-for="item in items"
@@ -136,6 +136,11 @@ export default Vue.extend({
       alert: false,
       model: 0, // ナビゲーションバー選択用
     };
+  },
+  computed: {
+    neverSearch(): boolean {
+      return this.$store.getters["twitter/timeline"].length === 0 && this.$store.getters["twitter/user"].length === 0;
+    }
   },
   watch: {
     $route (to, from) {
