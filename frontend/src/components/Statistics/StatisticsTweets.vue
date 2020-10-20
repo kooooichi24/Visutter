@@ -103,7 +103,11 @@ export default Vue.extend({
   },
   mounted(): void {
     const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
-    this.calcStatistics(timelineByCurrentScreenName);
+
+    // timelineByCurrentScreenNameの値が格納される前に呼び出された場合は、スキップする
+    if (timelineByCurrentScreenName.length > 0) {
+      this.calcStatistics(timelineByCurrentScreenName);
+    }
   },
   watch: {
     "$store.state.twitter.timeline"() {

@@ -183,6 +183,7 @@ export default Vue.extend({
         this.$store.dispatch('twitter/searchByScreenName', searchBy)
           .then(() => {
             this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
+            this.changePath();
           })
           .catch(() => {
             this.alert = true;
@@ -197,6 +198,20 @@ export default Vue.extend({
       // Error: NavigationDuplicated を回避するためにパスが変更する際のみpushする
       if (this.$route.path !== path) {
         this.$router.push(path);
+      }
+    },
+    /**
+     * 現在のパスがルートのときにユーザ検索を行った時に、パスをリダイレクトする関数
+     * ユーザー検索時に呼び出されることを想定
+     * 
+     * ルーとパス以外の検索は、カレントパスからは遷移しない
+     */
+    changePath(): void {
+      const currentPath: string = this.$route.path;
+      if (currentPath === '/') {
+        console.log("changePath");
+        this.$router.push('/achievement');
+        console.log("changedPath");
       }
     },
     changeUser(screenName: string): void {

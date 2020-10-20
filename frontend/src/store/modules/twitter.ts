@@ -23,7 +23,7 @@ const getters: GetterTree<TwitterState, RootState> = {
       return tl.screenName === state.currentSearchScreenName;
     });
 
-    return currentScreenNameTimeline[0].tweets;
+    return currentScreenNameTimeline.length > 0 ? currentScreenNameTimeline[0].tweets : [];
   }
 };
 
@@ -71,6 +71,8 @@ const actions: ActionTree<TwitterState, RootState> = {
           .catch(err => {
             reject(err.response);
           })
+      } else {
+        resolve();
       }
     });
   },
