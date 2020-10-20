@@ -122,6 +122,17 @@ export type Items2 = {
   screenName: string;
 }
 
+interface User {
+  id: number;
+  name: string;
+  screenName: string;
+  description: string;
+  followersCount: number;
+  friendsCount: number;
+  statusesCount: number;
+  profileImageUrlHttps: string;
+}
+
 export default Vue.extend({
   name: 'App',
   data(): DataType {
@@ -147,7 +158,11 @@ export default Vue.extend({
   watch: {
     $route (to) {
       this.model = this.items.findIndex(item => item.path === to.path);
-    }
+    },
+    "$store.state.twitter.user"() {
+      const user: User[] = this.$store.getters["twitter/user"];
+      this.items2 = user;
+    },
   },
   created(): void {
     this.$vuetify.theme.dark = true;
@@ -159,12 +174,13 @@ export default Vue.extend({
     }
   },
   mounted(): void {
-    this.$store.watch(
-      (state, getters) => getters["twitter/user"],
-      (newValue) => {
-        this.items2 = newValue
-      }
-    );
+    // this.$store.watch(
+    //   (state, getters) => getters["twitter/user"],
+    //   (newValue) => {
+    //     this.items2 = newValue
+    //   }
+    // );
+    this.items2 = this.$store.getters["twitter/user"];
 
     this.model = this.items.findIndex(item => item.path === this.$route.path);
   },
