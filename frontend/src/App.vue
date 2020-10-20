@@ -10,10 +10,10 @@
           <v-list-item
             v-for="(item, i) in items"
             :key="item.text"
-            link
-            @click="handlePath(item.path)"
-            :disabled="neverSearch && i!=0"
             :class='{ disabled: neverSearch && i!=0 }'
+            link
+            :disabled="neverSearch && i!=0"
+            @click="handlePath(item.path)"
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -174,14 +174,7 @@ export default Vue.extend({
     }
   },
   mounted(): void {
-    // this.$store.watch(
-    //   (state, getters) => getters["twitter/user"],
-    //   (newValue) => {
-    //     this.items2 = newValue
-    //   }
-    // );
     this.items2 = this.$store.getters["twitter/user"];
-
     this.model = this.items.findIndex(item => item.path === this.$route.path);
   },
   methods: {

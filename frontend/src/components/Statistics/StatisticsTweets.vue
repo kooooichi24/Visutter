@@ -5,8 +5,9 @@
         v-for="card in tweetStatistics"
         :key="card.key"
         cols="12"
-        sm="4"
-        lg="6"
+        sm="6"
+        lg="4"
+        xl="4"
       >
         <StatisticsCard :card="card" />
       </v-col>
