@@ -6,7 +6,7 @@ import Charts from '../views/Charts.vue';
 
 Vue.use(VueRouter);
 
-  const routes: Array<RouteConfig> = [
+const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',

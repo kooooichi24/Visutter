@@ -5,13 +5,15 @@
       app
       clipped
     >
-      <v-list dense :disabled="neverSearch">
+      <v-list dense>
         <v-list-item-group v-model="model" mandatory color="blue lighten-2">
           <v-list-item
-            v-for="item in items"
+            v-for="(item, i) in items"
             :key="item.text"
             link
             @click="handlePath(item.path)"
+            :disabled="neverSearch && i!=0"
+            :class='{ disabled: neverSearch && i!=0 }'
           >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
@@ -23,7 +25,7 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
-        <v-subheader class="mt-4 grey--text text--darken-1">SUBSCRIPTIONS</v-subheader>
+        <v-subheader class="mt-4 grey--text text--lighten-5">SUBSCRIPTIONS</v-subheader>
         <v-list>
           <v-list-item
             v-for="item in items2"
@@ -148,7 +150,13 @@ export default Vue.extend({
     }
   },
   created(): void {
-    this.$vuetify.theme.dark = true
+    this.$vuetify.theme.dark = true;
+
+    // 本当はNavigation Guardを利用したいが、
+    // vue-routerとtypescriptの相性が悪く自分の力では実現できないため、対応策として。
+    if (this.$route.path != '/') {
+      this.$router.push('/');
+    }
   },
   mounted(): void {
     this.$store.watch(
@@ -195,5 +203,13 @@ export default Vue.extend({
   right: 0;
   bottom: 0;
   z-index: 100;
+}
+
+.v-list-item.disabled{
+  .v-list-item__action {
+    .theme--dark.v-icon {
+      color: rgba(255, 255, 255, 0.5) !important;
+    }
+  }
 }
 </style>
