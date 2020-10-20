@@ -145,8 +145,8 @@ export default Vue.extend({
     }
   },
   watch: {
-    $route (to, from) {
-      this.model = this.items.findIndex(item => item.path === from.path);
+    $route (to) {
+      this.model = this.items.findIndex(item => item.path === to.path);
     }
   },
   created(): void {
