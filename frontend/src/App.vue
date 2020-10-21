@@ -26,21 +26,23 @@
           </v-list-item>
         </v-list-item-group>
         <v-subheader class="mt-4 grey--text text--lighten-5">SUBSCRIPTIONS</v-subheader>
-        <v-list>
-          <v-list-item
-            v-for="item in items2"
-            :key="item.text"
-            link
-            @click="changeUser(item.screenName)"
-          >
-            <v-list-item-avatar>
+        <v-list flat>
+          <v-list-item-group v-model="activedUserNum" mandatory color="blue lighten-3">
+            <v-list-item
+              v-for="item in items2"
+              :key="item.text"
+              link
+              @click="changeUser(item.screenName)"
+            >
+              <v-list-item-avatar>
               <img
                 :src="item.profileImageUrlHttps"
                 alt=""
               >
-            </v-list-item-avatar>
-            <v-list-item-title v-text="item.screenName"></v-list-item-title>
-          </v-list-item>
+              </v-list-item-avatar>
+              <v-list-item-title v-text="item.screenName"></v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
         </v-list>
       </v-list>
     </v-navigation-drawer>
@@ -109,6 +111,7 @@ export type DataType = {
   items2: Items2[];
   alert: boolean;
   model: number;
+  activedUserNum: number;
 }
 
 export type Items = {
@@ -148,6 +151,7 @@ export default Vue.extend({
       ],
       alert: false,
       model: 0, // ナビゲーションバー選択用
+      activedUserNum: 0,
     };
   },
   computed: {
@@ -184,6 +188,7 @@ export default Vue.extend({
           .then(() => {
             this.$store.commit('twitter/setCurrentSearchScreenName', searchBy);
             this.changePath();
+            this.bindNavUserSelected(searchBy);
           })
           .catch(() => {
             this.alert = true;
@@ -209,13 +214,17 @@ export default Vue.extend({
     changePath(): void {
       const currentPath: string = this.$route.path;
       if (currentPath === '/') {
-        console.log("changePath");
         this.$router.push('/achievement');
-        console.log("changedPath");
       }
     },
     changeUser(screenName: string): void {
       this.$store.commit('twitter/setCurrentSearchScreenName', screenName);
+    },
+    /**
+     * 検索に応じて、ナビゲーションバーのユーザーアイコンのアクティブ条件をバインドする
+     */
+    bindNavUserSelected(screenName: string): void {
+      this.activedUserNum = this.items2.findIndex(i => i.screenName === screenName);
     }
   },
 });
