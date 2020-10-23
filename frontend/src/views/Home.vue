@@ -1,14 +1,17 @@
 <template>
   <div class="home">
-    This is Home View Components.
+    <HomeCard />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import HomeCard from '@/components/HomeCard.vue';
 
 export default Vue.extend({
   name: 'Home',
-  components: {},
+  components: {
+    HomeCard,
+  },
 });
 </script>
