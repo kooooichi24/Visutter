@@ -231,6 +231,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.v-toolbar__title {
+  padding-left: 10px !important;
+}
+
 .alert {
   position: fixed;
   right: 0;
@@ -238,7 +242,7 @@ export default Vue.extend({
   z-index: 100;
 }
 
-.v-list-item.disabled{
+.v-list-item.disabled {
   .v-list-item__action {
     .theme--dark.v-icon {
       color: rgba(255, 255, 255, 0.5) !important;

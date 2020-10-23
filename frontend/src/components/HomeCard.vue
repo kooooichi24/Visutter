@@ -10,7 +10,7 @@
         xl="12"
       >
         <v-card
-          class="pa-1 grey darken-3"
+          class="pa-1 blue-grey darken-4"
           elevation="10"
           outlined
         >
@@ -80,3 +80,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.v-card__subtitle {
+  font-size: 0.7rem;
+}
+</style>
