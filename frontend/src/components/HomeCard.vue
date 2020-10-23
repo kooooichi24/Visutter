@@ -16,12 +16,10 @@
         >
           <v-card-title>{{ card.title }}</v-card-title>
           <v-card-subtitle>{{ card.subtitle }}</v-card-subtitle>
-          <!-- <v-card-text class="py-0">{{ card.text }}</v-card-text>
-          <v-card-text class="pt-0">{{ card.text }}</v-card-text> -->
           <v-card-text
             v-for="(text, i) in card.describe"
-            :key="text"
-            :class="[i===0 ? 'pb-0' : 'pt-0']">{{ text }}</v-card-text>
+            :key="i"
+            :class="[i===0 ? 'pb-0' : i===card.describe.length-1 ? 'pt-0' : 'py-0']">{{ text }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
