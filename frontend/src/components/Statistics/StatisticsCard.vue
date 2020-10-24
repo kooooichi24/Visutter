@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="pa-2 grey darken-4"
+    class="pa-2 blue-grey darken-4"
     outlined
     flat
   >
