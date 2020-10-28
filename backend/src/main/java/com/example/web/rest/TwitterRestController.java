@@ -10,6 +10,9 @@ import twitter4j.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * TwitterへのAPIリクエストをハンドリングするエンドポイント
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/api/twt")
