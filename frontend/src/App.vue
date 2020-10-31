@@ -193,6 +193,7 @@ export default Vue.extend({
           .catch(() => {
             this.alert = true;
             // 5秒後にalertを非表示にする
+            // setTimeoutごとのIDによりthis.alertがfalseになったら、setTimeoutを中断する処理を書く
             setTimeout(() => {
               this.alert = false
             }, 5000);
