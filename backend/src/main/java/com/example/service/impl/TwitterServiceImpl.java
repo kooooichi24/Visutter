@@ -26,7 +26,6 @@ public class TwitterServiceImpl implements TwitterService {
         while (true) {
             Paging paging = new Paging(page, COUNT_MAX);
             try {
-                System.out.println("page" + page);
                 if (statuses == null) {
                     statuses = twitter.getUserTimeline(screenName, paging);
                 } else {
