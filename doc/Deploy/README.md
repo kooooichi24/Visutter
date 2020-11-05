@@ -26,6 +26,8 @@ $ mvn clean package
 ```
 
 ### 3. コンテナ実行
+(ローカルでコンテナ実行して確認する場合)
+
 Docker Image作成
 ```bash
 $  docker build -t visutter .
