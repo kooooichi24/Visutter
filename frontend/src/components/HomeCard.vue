@@ -19,7 +19,7 @@
           <v-card-text
             v-for="(text, i) in card.describe"
             :key="i"
-            :class="[i===0 ? 'pb-0' : i===card.describe.length-1 ? 'pt-0' : 'py-0']">{{ text }}</v-card-text>
+            :class="[i===0 && card.describe.length != 1 ? 'pb-0' : i===card.describe.length-1 ? 'pt-0' : 'py-0']">{{ text }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
