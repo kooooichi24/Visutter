@@ -1,4 +1,5 @@
 # Microsoft SQL Serverの環境構築方法
+2020/11/13現在、VisutterではDBを利用していません。ただの備忘録です。
 ## Dockerを用いた手順
 ### Dockerのインストール
 https://www.docker.com/products/docker-desktop
