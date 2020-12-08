@@ -32,7 +32,7 @@ https://visutter.azurewebsites.net/
     $ git clone https://github.com/kooooichi24/Visutter.git
     ```
 
-3. NPMパッケージのインストール
+3. npmパッケージのインストール
 
     ```bash
     $ cd Visutter/frontend
@@ -76,21 +76,21 @@ https://visutter.azurewebsites.net/
     $ npm run serve
     ```
 
-## Usage
+## Architecture
+![Architecture](./architecture/architecture_diagram.png)
 
-## Roadmap
+## Technologies
+- Vue.js 2系
+- TypeScript 3系
+- vuex 3系
+- vuetify 2系
+- SpringBoot 2系
+- Docker
+- Microsoft Azure
 
-## Roadmap
-
-## License
-
-## Contact
-
-
-
-## サービス概要
-
-## モチベーション
-## 起動手順
-
-## 使用技術
+## Contributing
+1. Fork the Project
+2. Create your Feature Branch (git checkout -b feature/AmazingFeature)
+3. Commit your Changes (git commit -m 'Add some AmazingFeature')
+4. Push to the Branch (git push origin feature/AmazingFeature)
+5. Open a Pull Request
