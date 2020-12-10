@@ -12,6 +12,7 @@
 
 https://visutter.azurewebsites.net/
 ![Visutter_AchievementPage](./doc/image/Visutter_Achievement.png)
+![Visutter_Chart](./doc/image/Visutter_Chart.png)
 
 ## Usage
 ### Prerequisites
