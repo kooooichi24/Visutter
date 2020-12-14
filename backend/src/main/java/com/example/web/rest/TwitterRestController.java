@@ -23,7 +23,7 @@ public class TwitterRestController {
     }
 
     @GetMapping("/user")
-    public UserResponse user(@RequestParam("screenName") String screenName) throws TwitterException {
+    public UserResponse getUser(@RequestParam("screenName") String screenName) throws TwitterException {
         User user = twitterService.showUser(screenName);
         UserResponse userResponse = new UserResponse(user);
         return userResponse;
