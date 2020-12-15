@@ -2,4 +2,4 @@
 target/
 twitter4j.properties
 static/
-*.imi
+*.iml
