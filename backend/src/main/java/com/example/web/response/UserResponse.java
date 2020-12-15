@@ -1,7 +1,15 @@
 package com.example.web.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import twitter4j.User;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponse {
     private Long id;
     private String name;
@@ -21,37 +29,5 @@ public class UserResponse {
         this.friendsCount = user.getFriendsCount();
         this.statusesCount = user.getStatusesCount();
         this.profileImageUrlHttps = user.getProfileImageURLHttps();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getScreenName() {
-        return screenName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Integer getFollowersCount() {
-        return followersCount;
-    }
-
-    public Integer getFriendsCount() {
-        return friendsCount;
-    }
-
-    public Integer getStatusesCount() {
-        return statusesCount;
-    }
-
-    public String getProfileImageUrlHttps() {
-        return profileImageUrlHttps;
     }
 }
