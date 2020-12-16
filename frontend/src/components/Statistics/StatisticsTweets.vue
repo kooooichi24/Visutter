@@ -18,7 +18,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment, { Moment } from 'moment';
-import StatisticsCard from '@/components/Statistics/StatisticsCard.vue';
+import StatisticsCard from './StatisticsCard.vue';
 
 export type DataType = {
   tweetStatistics: TweetStatistics;
