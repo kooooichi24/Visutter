@@ -49,7 +49,7 @@ const actions: ActionTree<TwitterState, RootState> = {
       // 未検索の場合
       if (!isUserExists && !isTimelineExists) {
         // userを検索
-        axios.get(`/api/twt/user?screenName=${screenName}`)
+        axios.get(`http://localhost:80/api/twt/user?screenName=${screenName}`)
           .then(res => {
             commit('addUser', res.data);
             resolve(res.data);
@@ -59,7 +59,7 @@ const actions: ActionTree<TwitterState, RootState> = {
           })
         
         // timelineを検索
-        axios.get(`/api/twt/timeline?screenName=${screenName}`)
+        axios.get(`http://localhost:80/api/twt/timeline?screenName=${screenName}`)
           .then(res => {
             const payload: Timeline = {
               screenName: screenName,

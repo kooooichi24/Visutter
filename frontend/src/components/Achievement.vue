@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import StatisticsTweets from '@/components/Statistics/StatisticsTweets.vue';
+import StatisticsTweets from './Statistics/StatisticsTweets.vue';
 
 export default Vue.extend({
   name: 'Achievement',

@@ -37,6 +37,11 @@ type Tweet = {
   isRetweeted: boolean;
 }
 
+type thinedOutDataAndLabel = {
+  thinedOutData: number[];
+  thinedOutLabels: Moment[];
+}
+
 export default Vue.extend({
   name: 'ClimingChart',
   components: {
@@ -152,6 +157,12 @@ export default Vue.extend({
         data.push(currentCount);
       })
 
+      // if (data.length > 200) {
+      //   const thinedOutDataAndLabel: thinedOutDataAndLabel = this.thinOutDataAndLabel(data, labels);
+      //   data = thinedOutDataAndLabel.thinedOutData;
+      //   labels = thinedOutDataAndLabel.thinedOutLabels;
+      // }
+
       return {
         labels: labels,
         datasets: [
@@ -163,6 +174,24 @@ export default Vue.extend({
           }
         ]
       };
+    },
+    /**
+     * データとラベルを間引く関数
+     * 条件: Tweet数が200以上の場合は間引く
+     * 
+     * @param data: number[] ある1日のツイート数の配列
+     * @param labels: Moment[] ツイート日の配列
+     */
+    thinOutDataAndLabel(data: number[], labels: Moment[]): thinedOutDataAndLabel {
+      const thinedOutData = data.reverse().filter((d, i) => {
+        return i===0 || i===data.length-1 || i%6===0;
+      }).reverse();
+
+      const thinedOutLabels = labels.reverse().filter((l, i) => {
+        return i===0 || i===labels.length-1 || i%6===0;
+      }).reverse();
+      
+      return { thinedOutData, thinedOutLabels };
     },
   },
 });
