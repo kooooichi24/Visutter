@@ -22,13 +22,27 @@ public class TwitterRestController {
         this.twitterService = twitterService;
     }
 
+    /**
+     * スクリーンネームを基にTwitterのユーザ情報を取得するコントローラーメソッド。
+     *
+     * @param screenName スクリーンネーム
+     * @return UserResponse UserResponseインスタンス
+     * @throws TwitterException TwitterAPIの呼び出しに失敗したときにスローされる例外クラス。
+     */
+    // TODO: HTTPを意識したAPIのレスポンスを実現したい。
     @GetMapping("/user")
-    public UserResponse getUser(@RequestParam("screenName") String screenName) throws TwitterException {
+    public UserResponse getUserByScreenName(@RequestParam("screenName") String screenName) throws TwitterException {
         User user = twitterService.showUser(screenName);
-        UserResponse userResponse = new UserResponse(user);
-        return userResponse;
+        return new UserResponse(user);
     }
 
+    /**
+     * スクリーンネームを基にTwitterユーザのタイムラインを取得するコントローラーメソッド。
+     *
+     * @param screenName スクリーンネーム
+     * @return List<TimelineResponse> TimelineResponseのリストインスタンス
+     * @throws TwitterException TwitterAPIの呼び出しに失敗したときにスローされる例外クラス。
+     */
     @GetMapping("/timeline")
     public List<TimelineResponse> userTimeline(@RequestParam("screenName") String screenName) throws TwitterException {
         ResponseList<Status> statuses = twitterService.getAllUserTimeline(screenName);

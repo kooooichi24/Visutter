@@ -4,42 +4,46 @@ import com.example.service.TwitterService;
 import com.example.web.response.UserResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import twitter4j.TwitterException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import twitter4j.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @DisplayName("エンドポイント /api/twt のコントローラクラス")
-@WebMvcTest(TwitterRestController.class)
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class TwitterRestControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+    @InjectMocks
+    TwitterRestController twitterRestController;
 
-    // TODO @Mock と @MockBean の違いを把握する https://www.baeldung.com/java-spring-mockito-mock-mockbean
-    @MockBean
+    @Mock
     TwitterService twitterService;
 
     @Test
-    void test_aa() throws TwitterException {
-        UserResponse userResponse = UserResponse.builder()
-                .id(10000L)
-                .name("Fchandayo24")
-                .screenName("Fchan")
-                .description("kooooichi24's English learning account")
-                .followersCount(10)
-                .friendsCount(100)
-                .statusesCount(10)
-                .profileImageUrlHttps("https://localhost:8080/link")
+    void test_スクリーンネームを基にTwitterのユーザ情報を取得する() throws TwitterException {
+
+        Twitter twitter = TwitterFactory.getSingleton();
+        User user = twitter.showUser("Fchandayo24");
+
+        when(twitterService.showUser("Fchandayo24")).thenReturn(user);
+
+        UserResponse actual = twitterRestController.getUserByScreenName("Fchandayo24");
+
+        UserResponse expected = UserResponse.builder()
+                .id(1212740416572772353L)
+                .name("Fchan")
+                .screenName("Fchandayo24")
+                .description("")
+                .followersCount(14)
+                .friendsCount(359)
+                .statusesCount(1141)
+                .profileImageUrlHttps("https://pbs.twimg.com/profile_images/1336310404381769729/0q2P00bd_normal.jpg")
                 .build();
-        
-        when(twitterService.showUser("Fchandayo24")).thenReturn(userResponse);
 
-
+        assertEquals(expected, actual);
     }
 }

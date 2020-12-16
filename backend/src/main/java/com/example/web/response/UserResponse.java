@@ -1,5 +1,6 @@
 package com.example.web.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import twitter4j.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponse {
+
     private Long id;
     private String name;
     private String screenName;
