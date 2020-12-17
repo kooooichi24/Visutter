@@ -31,9 +31,14 @@ type Tweet = {
   isRetweeted: boolean;
 }
 
-type thinedOutDataAndLabel = {
+type ThinedOutDataAndLabel = {
   thinedOutData: number[];
   thinedOutLabels: Moment[];
+}
+
+type DataCollections = {
+  datacollectionCliming: ChartData;
+  datacollectionDaillyEffort: ChartData;
 }
 
 export default Vue.extend({
@@ -51,17 +56,17 @@ export default Vue.extend({
   mounted(): void {
     const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
     
-    const datacollection = this.getDataCollection(timelineByCurrentScreenName);
-    this.datacollectionCliming = datacollection.datacollectionCliming;
-    this.datacollectionDaillyEffort = datacollection.datacollectionDaillyEffort;
+    const datacollections = this.convertTimelineToClimingAndDailyEffortData(timelineByCurrentScreenName);
+    this.datacollectionCliming = datacollections.datacollectionCliming;
+    this.datacollectionDaillyEffort = datacollections.datacollectionDaillyEffort;
   },
   watch: {
     "$store.state.twitter.timeline"() {
       const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
       
-      const datacollection = this.getDataCollection(timelineByCurrentScreenName);
-      this.datacollectionCliming = datacollection.datacollectionCliming;
-      this.datacollectionDaillyEffort = datacollection.datacollectionDaillyEffort;
+      const datacollections = this.convertTimelineToClimingAndDailyEffortData(timelineByCurrentScreenName);
+      this.datacollectionCliming = datacollections.datacollectionCliming;
+      this.datacollectionDaillyEffort = datacollections.datacollectionDaillyEffort;
     },
     /**
      * screenNameが変更された、かつ、vuexのtimelineにscreenNameのオブジェクトが格納されている状態で処理を行う
@@ -80,14 +85,20 @@ export default Vue.extend({
       if (isExists) {
         const timelineByCurrentScreenName: Tweet[] = this.$store.getters["twitter/timelineByCurrentScreenName"];
         
-        const datacollection = this.getDataCollection(timelineByCurrentScreenName);
-        this.datacollectionCliming = datacollection.datacollectionCliming;
-        this.datacollectionDaillyEffort = datacollection.datacollectionDaillyEffort;
+        const datacollections = this.convertTimelineToClimingAndDailyEffortData(timelineByCurrentScreenName);
+        this.datacollectionCliming = datacollections.datacollectionCliming;
+        this.datacollectionDaillyEffort = datacollections.datacollectionDaillyEffort;
       }
     },
   },
   methods: {
-    getDataCollection(timeline: Tweet[]): { datacollectionCliming: ChartData; datacollectionDaillyEffort: ChartData } {
+    /**
+     * タイムラインのツイート情報 を ClimingとDailyEffort用のChart.jsのデータ構造に変換するメソッド。
+     * 
+     * @param {Tweet[]} timeline タイムラインの配列。
+     * @return {DataCollections} ClimingのChart.jsのデータ と DailyEffortのChart.jsのデータ。
+     */
+    convertTimelineToClimingAndDailyEffortData(timeline: Tweet[]): DataCollections {
       const newTimeline = [ ...timeline ].reverse();
       const dataCliming: number[] =[];
       const dataDailyEffort: number[] =[];
@@ -117,7 +128,7 @@ export default Vue.extend({
         dataDailyEffort.push(count);
       })
       // if (data.length > 200) {
-      //   const thinedOutDataAndLabel: thinedOutDataAndLabel = this.thinOutDataAndLabel(data, labels);
+      //   const thinedOutDataAndLabel: ThinedOutDataAndLabel = this.thinOutDataAndLabel(data, labels);
       //   data = thinedOutDataAndLabel.thinedOutData;
       //   labels = thinedOutDataAndLabel.thinedOutLabels;
       // }
@@ -152,13 +163,14 @@ export default Vue.extend({
     },
 
     /**
-     * データとラベルを間引く関数
-     * 条件: Tweet数が200以上の場合は間引く
+     * データとラベルを間引く関数。
+     * 条件: Tweet数が200以上の場合は間引く。
      * 
-     * @param data: number[] ある1日のツイート数の配列
-     * @param labels: Moment[] ツイート日の配列
+     * @param {number[]} data ある1日のツイート数の配列。
+     * @param {Moment[]} labels ツイート日の配列。
+     * @return {ThinedOutDataAndLabel}
      */
-    thinOutDataAndLabel(data: number[], labels: Moment[]): thinedOutDataAndLabel {
+    thinOutDataAndLabel(data: number[], labels: Moment[]): ThinedOutDataAndLabel {
       const thinedOutData = data.reverse().filter((d, i) => {
         return i===0 || i===data.length-1 || i%6===0;
       }).reverse();
