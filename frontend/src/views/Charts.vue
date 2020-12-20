@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import moment, { Moment } from 'moment';
+import moment from 'moment';
 import ClimingChart from '../components/ClimingChart.vue';
 import DailyEffortChart from '../components/DailyEffortChart.vue';
 import { ChartData } from "chart.js";
@@ -33,7 +33,7 @@ type Tweet = {
 
 type ThinedOutDataAndLabel = {
   thinedOutData: number[];
-  thinedOutLabels: Moment[];
+  thinedOutLabels: string[];
 }
 
 type DataCollections = {
@@ -100,38 +100,37 @@ export default Vue.extend({
      */
     convertTimelineToClimingAndDailyEffortData(timeline: Tweet[]): DataCollections {
       const newTimeline = [ ...timeline ].reverse();
-      const dataCliming: number[] =[];
-      const dataDailyEffort: number[] =[];
-      const labels: Moment[] = [];
-      let currentCount = 0;
-      // ツイート日をlabelsに代入する
+
+      const dataDailyEffortObject: { [key: string]: number} = {};
+      const dataClimingObject: { [key: string]: number} = {};
+      let labels: string[] = [];
+      let climingCount = 0;
+
       newTimeline.forEach(nt => {
-        const createdAt = moment(nt.createdAt, 'YYYY-MM-DD');
-        // labelsにツイート日が存在していない場合追加する
-        let isCreatedAt = false;
-        labels.forEach(l => {
-          if (moment(l).isSame(createdAt, 'day')) {
-            isCreatedAt = true;
-          }
-        })
-        if (!isCreatedAt) {
+        const createdAt = moment(nt.createdAt).format('YYYY-MM-DD');
+        climingCount += 1;
+        dataClimingObject[createdAt] = climingCount;
+        
+        if (Object.prototype.hasOwnProperty.call(dataDailyEffortObject, createdAt)) {
+          dataDailyEffortObject[createdAt] += 1;
+        } else {
+          dataDailyEffortObject[createdAt] = 1;
+
           labels.push(createdAt);
         }
-      })
-      // ツイート数をdataに代入する
-      labels.forEach(l => {
-        const count = newTimeline.filter(nt => {
-          return moment(l).isSame(moment(nt.createdAt), 'day');
-        }).length;
-        currentCount += count;
-        dataCliming.push(currentCount);
-        dataDailyEffort.push(count);
-      })
-      // if (data.length > 200) {
-      //   const thinedOutDataAndLabel: ThinedOutDataAndLabel = this.thinOutDataAndLabel(data, labels);
-      //   data = thinedOutDataAndLabel.thinedOutData;
-      //   labels = thinedOutDataAndLabel.thinedOutLabels;
-      // }
+      });
+
+      let dataDailyEffort = Object.values(dataDailyEffortObject);
+      let dataCliming = Object.values(dataClimingObject);
+
+      if (dataCliming.length > 300) {
+        const thinedOutDataClimingAndLabel: ThinedOutDataAndLabel = this.thinOutDataAndLabel(dataCliming, labels);
+        const thinedOutDataDailyEffortAndLabel: ThinedOutDataAndLabel = this.thinOutDataAndLabel(dataDailyEffort, labels);
+        dataCliming = thinedOutDataClimingAndLabel.thinedOutData;
+        labels = thinedOutDataClimingAndLabel.thinedOutLabels;
+
+        dataDailyEffort = thinedOutDataDailyEffortAndLabel.thinedOutData;
+      }
 
       const datacollectionCliming = {
         labels: labels,
@@ -164,18 +163,18 @@ export default Vue.extend({
 
     /**
      * データとラベルを間引く関数。
-     * 条件: Tweet数が200以上の場合は間引く。
+     * 条件: Tweet数が300以上の場合は間引く。
      * 
      * @param {number[]} data ある1日のツイート数の配列。
-     * @param {Moment[]} labels ツイート日の配列。
+     * @param {string[]} labels ツイート日の配列。
      * @return {ThinedOutDataAndLabel}
      */
-    thinOutDataAndLabel(data: number[], labels: Moment[]): ThinedOutDataAndLabel {
+    thinOutDataAndLabel(data: number[], labels: string[]): ThinedOutDataAndLabel {
       const thinedOutData = data.reverse().filter((d, i) => {
-        return i===0 || i===data.length-1 || i%6===0;
+        return i===0 || i===data.length-1 || i%7===0;
       }).reverse();
       const thinedOutLabels = labels.reverse().filter((l, i) => {
-        return i===0 || i===labels.length-1 || i%6===0;
+        return i===0 || i===labels.length-1 || i%7===0;
       }).reverse();
       return { thinedOutData, thinedOutLabels };
     },
