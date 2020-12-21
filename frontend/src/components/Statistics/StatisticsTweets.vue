@@ -186,40 +186,44 @@ export default Vue.extend({
       this.tweetStatistics.mostFavoriteCount = mostFavoriteCount;
       this.tweetStatistics.mostRetweetCount = mostRetweetCount;
     },
+    /**
+     * busiestDay と streakSum を算出し代入する関数。
+     * 
+     * @param {Tweet[]} timeline タイムラインの配列。
+     */
     calcStreak(timeline: Tweet[]): void {
-      // timelineを年月が早い順に変更する
       const newTimeline = [ ...timeline ].reverse();
-      const firstDate: Moment = moment(newTimeline[0].createdAt, 'YYYY-MM-DD');
-      let busiestDate = "";
-      let busiestNum = 1;
-      let count = 1;
-      let streakCount = 1;
+      const dataDailyEffortObject: {[key: string]: number} = {};
 
-      for (let i = 0; i < newTimeline.length-1; i++) {
-        const first: Moment = moment(newTimeline[i].createdAt, 'YYYY-MM-DD');
-        const second: Moment = moment(newTimeline[i+1].createdAt, 'YYYY-MM-DD');
-        if (first.diff(second, 'days') === 0) {
-          count++;
-          if (count > busiestNum) {
-            busiestNum = count;
-            busiestDate = moment.months(first.get('month')) + first.format(' DD, YYYY');
-          }
+      newTimeline.forEach(nt => {
+        const createdAt = moment(nt.createdAt).format('YYYY-MM-DD');
+        
+        if (Object.prototype.hasOwnProperty.call(dataDailyEffortObject, createdAt)) {
+          dataDailyEffortObject[createdAt] += 1;
         } else {
-          count = 1;
-          streakCount++;
+          dataDailyEffortObject[createdAt] = 1;
         }
-      }
+      });
+
+      const busiestNum = Math.max(...Object.values(dataDailyEffortObject));
+      const mostBusiestNumIndex = Object.values(dataDailyEffortObject).indexOf(busiestNum);
+      const busiestDateMoment = moment(Object.keys(dataDailyEffortObject)[mostBusiestNumIndex]);
+      const busiestDate = moment.months(busiestDateMoment.get('month')) + busiestDateMoment.format(' DD, YYYY');
 
       const busiestDay: CardType = {
         overline: "Busiest day",
         title: busiestNum + " tweets",
         subtitle: busiestDate,
       };
+      
+
+      const streakCount = Object.values(dataDailyEffortObject).length;
+      const firstTweetDate: Moment = moment(newTimeline[0].createdAt, 'YYYY-MM-DD');
 
       const streakSum: CardType = {
         overline: "Streak Sum",
         title: streakCount + " days",
-        subtitle: moment.months(firstDate.get('month')) + firstDate.format(' DD, YYYY') + " ー Today",
+        subtitle: moment.months(firstTweetDate.get('month')) + firstTweetDate.format(' DD, YYYY') + " ー Today",
       };
 
       this.tweetStatistics.busiestDay = busiestDay;
